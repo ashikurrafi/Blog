@@ -13,6 +13,6 @@ connectDataBase()
       );
     })
   )
-  .catch((err) => {
-    console.log("MongoDB connection failed !!! ", err);
+  .catch((error) => {
+    console.log("MongoDB connection failed !!! ", error);
   });
