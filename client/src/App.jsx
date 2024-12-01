@@ -1,18 +1,18 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import './App.css'
-import Home from './components/home/Home'
+import { Route, Routes } from "react-router-dom";
+import NavbarComponent from "./components/NavbarComponent";
+import UserAuthFormPage from "./pages/UserAuthFormPage";
 
 function App() {
-
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<Home />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<NavbarComponent />}>
+          <Route path="/signin" element={<UserAuthFormPage type="sign-in" />} />
+          <Route path="/signup" element={<UserAuthFormPage type="sign-up" />} />
+        </Route>
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

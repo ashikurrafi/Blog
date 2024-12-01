@@ -2,27 +2,28 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "server.js",
+  "type": "module",
   "scripts": {
-    
     "start": "node src/server.js",
     "dev": "nodemon -r dotenv/config --experimental-json-modules src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
+    "aws-sdk": "^2.1692.0",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
+    "express": "^4.21.1",
+    "firebase-admin": "^13.0.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.5.3"
+    "mongoose": "^8.8.3",
+    "nanoid": "^5.0.9"
   },
   "devDependencies": {
     "morgan": "^1.10.0",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.7"
   }
 }

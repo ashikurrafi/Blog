@@ -1,6 +1,8 @@
+import cors from "cors";
 import express from "express";
 import morgan from "morgan";
-import cors from "cors";
+
+import authRoute from "./routes/authRoute.js";
 
 const app = express();
 
@@ -14,5 +16,7 @@ app.get("/test", (req, res) => {
 app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
+
+app.use("/", authRoute);
 
 export default app;
