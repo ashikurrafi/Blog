@@ -114,6 +114,18 @@ const userSchema = mongoose.Schema(
       ref: "blogs",
       default: [],
     },
+    lastLogin: {
+      type: Date,
+      default: Date.now,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    resetPasswordToken: String,
+    resetPasswordExpiredAt: Date,
+    verificationToken: String,
+    verificationTokenExpiredAt: Date,
   },
   {
     timestamps: {

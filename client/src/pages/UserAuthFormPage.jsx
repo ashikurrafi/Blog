@@ -1,14 +1,85 @@
+import axios from "axios";
+import { useRef } from "react";
+import { Toaster, toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import PageAnimation from "../common/PageAnimation";
 import InputComponent from "../components/InputComponent";
 import googleIcon from "../imgs/google.png";
 
 const UserAuthFormPage = ({ type }) => {
+  const authForm = useRef();
+
+  // const userAuthThroughServer = (serverRoute, formData) => {
+  //   axios
+  //     .post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
+  //     .then(({ data }) => {
+  //       console.log(data);
+  //     })
+  //     .catch(({ response }) => {
+  //       toast.error(response.data.error);
+  //     });
+  // };
+
+  const userAuthThroughServer = async (serverRoute, formData) => {
+    try {
+      const { data } = await axios.post(
+        import.meta.env.VITE_SERVER_DOMAIN + serverRoute,
+        formData
+      );
+      console.log(data);
+      // Handle successful login/signup (e.g., save token, redirect, etc.)
+    } catch ({ response }) {
+      toast.error(response.data.error);
+    }
+  };
+
+  const hadleSubmit = (e) => {
+    e.preventDefault();
+
+    const serverRoute = type == "sign-in" ? "/signin" : "/signup";
+
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_+=<>?]).{8,20}$/;
+    const form = new FormData(authForm.current);
+    const formData = {};
+    for (let [key, value] of form.entries()) {
+      formData[key] = value;
+      console.log(formData);
+    }
+
+    const { fullname, email, password } = formData;
+
+    // Validation checks
+    if (fullname) {
+      if (fullname.length < 3) {
+        return toast.error("Fullname must be at least 3 characters long");
+      }
+    }
+
+    if (!email.length) {
+      return toast.error("Email is required");
+    }
+
+    if (!emailRegex.test(email)) {
+      return toast.error("Email is invalid");
+    }
+
+    if (!passwordRegex.test(password)) {
+      return toast.error(
+        "Password must be 8-20 characters long, include uppercase, lowercase, numbers, and special characters"
+      );
+    }
+
+    userAuthThroughServer(serverRoute, formData);
+  };
+
   return (
     <>
       <PageAnimation keyValue={type}>
         <section className="h-cover flex items-center justify-center">
-          <form className="w-[80%] max-w-0[400px]">
+          <Toaster />
+          <form className="w-[80%] max-w-0[400px]" ref={authForm}>
             <h1 className="text-4xl font-gelasio capitalize text-center mb-24">
               {type == "sign-in" ? "Welcome back" : "Join us today"}
             </h1>
@@ -37,7 +108,11 @@ const UserAuthFormPage = ({ type }) => {
               icon="fi-rr-key"
             />
 
-            <button className="btn-dark center mt-14" type="submit">
+            <button
+              className="btn-dark center mt-14"
+              type="submit"
+              onClick={hadleSubmit}
+            >
               {type.replace("-", " ")}
             </button>
 
