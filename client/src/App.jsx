@@ -1,16 +1,9 @@
-import { Route, Routes } from "react-router-dom";
-import NavbarComponent from "./components/NavbarComponent";
-import UserAuthFormPage from "./pages/UserAuthFormPage";
+import "./App.css";
 
 function App() {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<NavbarComponent />}>
-          <Route path="/signin" element={<UserAuthFormPage type="sign-in" />} />
-          <Route path="/signup" element={<UserAuthFormPage type="sign-up" />} />
-        </Route>
-      </Routes>
+      <h1 className="text-3xl font-bold underline">Hello world!</h1>
     </>
   );
 }

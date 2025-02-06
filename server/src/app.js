@@ -1,22 +1,19 @@
-import cors from "cors";
-import express from "express";
-import morgan from "morgan";
+const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
 
-import authRoute from "./routes/authRoute.js";
+const router = require("./routes");
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
 app.use(morgan("dev"));
+app.use(express.json());
+app.use(cors());
 
-app.get("/test", (req, res) => {
-  res.send("Test API is working [GET] <br/> Hello, World!");
+app.use(router);
+
+app.use("*", (req, res) => {
+  res.status(404).json({ message: "Route not found" });
 });
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
 
-app.use("/", authRoute);
-
-export default app;
+module.exports = app;
