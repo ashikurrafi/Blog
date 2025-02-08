@@ -22,7 +22,7 @@ const ArticleCard = ({ className }) => {
           <div className="flex justify-between flex-nowrap items-center mt-6">
             <div className="flex items-center gap-x-2 md:gap-x-2.5">
               <img
-                src={images.postProfileImage}
+                src={images.PostProfileImage}
                 alt="post profile"
                 className="w-9 h-9 md:w-10 md:h-10"
               />

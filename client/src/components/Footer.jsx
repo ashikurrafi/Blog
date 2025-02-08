@@ -130,7 +130,7 @@ const Footer = () => {
             </p>
           </div>
         </footer>
-      </section>{" "}
+      </section>
     </>
   );
 };
