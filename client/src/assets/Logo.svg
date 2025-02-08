@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176.06 83.88">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #231f20;
+        font-family: Calibri-Bold, Calibri;
+        font-size: 72px;
+        font-weight: 700;
+      }
+
+      .cls-2 {
+        letter-spacing: -.02em;
+      }
+    </style>
+  </defs>
+  <text class="cls-1" transform="translate(0 58.75)"><tspan class="cls-2" x="0" y="0">K</tspan><tspan x="38.21" y="0">otha</tspan></text>
+</svg>
