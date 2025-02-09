@@ -1,4 +1,4 @@
-const { hash } = require("bcryptjs");
+const { hash, compare } = require("bcryptjs");
 const { sign } = require("jsonwebtoken");
 const { Schema, model } = require("mongoose");
 
@@ -26,6 +26,9 @@ UserSchema.methods.generateJWT = async function () {
   return await sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
+};
+UserSchema.methods.comparePassword = async function (enteredPassword) {
+  return await compare(enteredPassword, this.password);
 };
 
 module.exports = model("User", UserSchema);
