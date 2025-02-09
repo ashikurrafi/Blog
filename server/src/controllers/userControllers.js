@@ -88,7 +88,31 @@ const loginUser = async (req, res, next) => {
   }
 };
 
+const userProfileByID = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (user) {
+      return res.status(201).json({
+        _id: user._id,
+        avatar: user.avatar,
+        name: user.name,
+        email: user.email,
+        verified: user.verified,
+        super: user.super,
+        admin: user.admin,
+      });
+    } else {
+      const error = new Error("User not found");
+      error.statusCode = 404;
+      next(error);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  userProfileByID,
 };
