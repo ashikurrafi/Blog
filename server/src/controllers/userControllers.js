@@ -1,25 +1,23 @@
 const User = require("../models/userModel");
 
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      return res
-        .status(400)
-        .json({ message: "All fields (name, email, password) are required" });
+      throw new Error("All fields (name, email, password) are required");
     }
     console.log(req.body);
 
     // Basic email format validation
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      throw new Error("Invalid email");
     }
 
     const existUser = await User.findOne({ email });
     if (existUser) {
-      return res.status(400).json({ message: "User already exists" });
+      throw new Error("User already exists");
     }
 
     const user = await User.create({
@@ -42,7 +40,6 @@ const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(400).json({ message: error.message });
     next(error);
   }
 };
