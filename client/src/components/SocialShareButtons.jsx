@@ -37,7 +37,7 @@ const SocialShareButtons = ({ url, title }) => {
         >
           <FaWhatsappSquare className="text-[#25D366] w-12 h-auto" />
         </a>
-      </div>{" "}
+      </div>
     </>
   );
 };

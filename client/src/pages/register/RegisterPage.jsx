@@ -1,23 +1,37 @@
 import { useMutation } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import MainLayout from "../../components/MainLayout";
 import { signup } from "../../services/index/users";
+import { userActions } from "../../store/reducers/userReducers";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userState = useSelector((state) => state.user);
+
   const { mutate, isLoading } = useMutation({
     mutationFn: ({ name, email, password }) => {
       return signup({ name, email, password });
     },
     onSuccess: (data) => {
-      console.log(data);
+      dispatch(userActions.setUserInfo(data));
+      localStorage.setItem("account", JSON.stringify(data));
     },
     onError: (error) => {
       toast.error(error.message);
       console.log(error);
     },
   });
+
+  useEffect(() => {
+    if (userState.userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userState.userInfo]);
 
   const {
     register,
@@ -189,7 +203,7 @@ const RegisterPage = () => {
                 Register
               </button>
               <p className="text-sm font-semibold text-[#5a7184]">
-                You have an account?{" "}
+                You have an account?
                 <Link to="/login" className="text-primary">
                   Login now
                 </Link>
