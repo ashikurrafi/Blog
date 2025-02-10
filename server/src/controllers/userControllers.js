@@ -1,4 +1,6 @@
+const uploadPicture = require("../middlewares/uploadPictureMiddleware");
 const User = require("../models/userModel");
+const { fileRemover } = require("../utils/fileRemover");
 
 const registerUser = async (req, res, next) => {
   try {
@@ -140,9 +142,63 @@ const updateUserProfile = async (req, res, next) => {
   }
 };
 
+const updateProfilePicture = async (req, res, next) => {
+  try {
+    const upload = uploadPicture.single("profilePicture");
+    upload(req, res, async function (err) {
+      if (err) {
+        const error = new Error(
+          "An unknown error occurred when uploading " + err.message
+        );
+        next(error);
+      } else {
+        // every thing went well
+        if (req.file) {
+          const updatedUser = await User.findByIdAndUpdate(
+            req.user._id,
+            {
+              avatar: req.file.filename,
+            },
+            { new: true }
+          );
+          res.json({
+            _id: updatedUser._id,
+            avatar: updatedUser.avatar,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            verified: updatedUser.verified,
+            super: updatedUser.super,
+            admin: updatedUser.admin,
+            token: await updatedUser.generateJWT(),
+          });
+        } else {
+          const updatedUser = await User.findById(req.user._id);
+          const filename = updatedUser.avatar;
+          updatedUser.avatar = "";
+          await updatedUser.save();
+          fileRemover(filename);
+          res.json({
+            _id: updatedUser._id,
+            avatar: updatedUser.avatar,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            verified: updatedUser.verified,
+            super: updatedUser.super,
+            admin: updatedUser.admin,
+            token: await updatedUser.generateJWT(),
+          });
+        }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   userProfileByID,
   updateUserProfile,
+  updateProfilePicture,
 };
