@@ -1,8 +1,24 @@
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import MainLayout from "../../components/MainLayout";
+import { signup } from "../../services/index/users";
 
 const RegisterPage = () => {
+  const { mutate, isLoading } = useMutation({
+    mutationFn: ({ name, email, password }) => {
+      return signup({ name, email, password });
+    },
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      console.log(error);
+    },
+  });
+
   const {
     register,
     handleSubmit,
@@ -18,7 +34,8 @@ const RegisterPage = () => {
     mode: "onChange",
   });
   const submitHandler = (data) => {
-    console.log(data);
+    const { name, email, password } = data;
+    mutate({ name, email, password });
   };
   const password = watch("password");
   return (
@@ -42,8 +59,8 @@ const RegisterPage = () => {
                   id="name"
                   {...register("name", {
                     minLength: {
-                      value: 1,
-                      message: "Name length must be at least 1 character",
+                      value: 3,
+                      message: "Name length must be at least 3 character",
                     },
                     required: {
                       value: true,
@@ -109,8 +126,8 @@ const RegisterPage = () => {
                       message: "Password is required",
                     },
                     minLength: {
-                      value: 6,
-                      message: "Password length must be at least 6 characters",
+                      value: 8,
+                      message: "Password length must be at least 8 characters",
                     },
                   })}
                   placeholder="Enter password"
@@ -166,7 +183,7 @@ const RegisterPage = () => {
               </Link>
               <button
                 type="submit"
-                disabled={!isValid}
+                disabled={!isValid || isLoading}
                 className="bg-primary text-white font-bold text-lg py-4 px-8 w-full rounded-lg my-6 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 Register
