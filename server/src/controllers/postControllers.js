@@ -90,8 +90,46 @@ const deletePost = async (req, res, next) => {
   }
 };
 
+const getPost = async (req, res, next) => {
+  try {
+    const post = await Post.findOne({ slug: req.params.slug }).populate([
+      {
+        path: "user",
+        select: ["avatar", "name"],
+      },
+      {
+        path: "comments",
+        match: {
+          check: true,
+          parent: null,
+        },
+        populate: [
+          {
+            path: "user",
+            select: ["avatar", "name"],
+          },
+          {
+            path: "replies",
+            match: {
+              check: true,
+            },
+          },
+        ],
+      },
+    ]);
+    if (!post) {
+      const error = new Error("Post was not found");
+      return next(error);
+    }
+    return res.json(post);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createPost,
   updatePost,
   deletePost,
+  getPost,
 };
