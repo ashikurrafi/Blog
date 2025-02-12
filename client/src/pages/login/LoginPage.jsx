@@ -131,7 +131,7 @@ const LoginPage = () => {
                 Sign In
               </button>
               <p className="text-sm font-semibold text-[#5a7184]">
-                Do not have an account?{" "}
+                Do not have an account?
                 <Link to="/register" className="text-primary">
                   Register now
                 </Link>
@@ -139,7 +139,7 @@ const LoginPage = () => {
             </form>
           </div>
         </section>
-      </MainLayout>{" "}
+      </MainLayout>
     </>
   );
 };

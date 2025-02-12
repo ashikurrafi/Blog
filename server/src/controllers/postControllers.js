@@ -1,14 +1,13 @@
-const uuidv4 = require("uuid");
-const uploadPicture = require("../middlewares/uploadPictureMiddleware");
+const { v4: uuidv4 } = require("uuid");
 const Post = require("../models/postModel");
-const Comment = require("../models/commentModel");
-const fileRemover = require("../utils/fileRemover");
+const { fileRemover } = require("../utils/fileRemover");
+const uploadPicture = require("../middlewares/uploadPictureMiddleware");
 
 const createPost = async (req, res, next) => {
   try {
     const post = new Post({
-      title: "sample title",
-      caption: "sample caption",
+      title: "Sample title",
+      caption: "Sample caption",
       slug: uuidv4(),
       body: {
         type: "doc",
@@ -53,16 +52,14 @@ const updatePost = async (req, res, next) => {
       } else {
         // every thing went well
         if (req.file) {
-          let filename;
-          filename = post.photo;
+          const filename = post.photo;
           if (filename) {
             fileRemover(filename);
           }
           post.photo = req.file.filename;
           handleUpdatePostData(req.body.document);
         } else {
-          let filename;
-          filename = post.photo;
+          const filename = post.photo;
           post.photo = "";
           fileRemover(filename);
           handleUpdatePostData(req.body.document);
@@ -74,77 +71,7 @@ const updatePost = async (req, res, next) => {
   }
 };
 
-const deletePost = async (req, res, next) => {
-  try {
-    const post = await Post.findOneAndDelete({ slug: req.params.slug });
-    if (!post) {
-      const error = new Error("Post aws not found");
-      return next(error);
-    }
-    await Comment.deleteMany({ post: post._id });
-    return res.json({
-      message: "Post is successfully deleted",
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getPost = async (req, res, next) => {
-  try {
-    const post = await Post.findOne({ slug: req.params.slug }).populate([
-      {
-        path: "user",
-        select: ["avatar", "name"],
-      },
-      {
-        path: "comments",
-        match: {
-          check: true,
-          parent: null,
-        },
-        populate: [
-          {
-            path: "user",
-            select: ["avatar", "name"],
-          },
-          {
-            path: "replies",
-            match: {
-              check: true,
-            },
-          },
-        ],
-      },
-    ]);
-    if (!post) {
-      const error = new Error("Post was not found");
-      return next(error);
-    }
-    return res.json(post);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getAllPosts = async (req, res, next) => {
-  try {
-    const posts = await Post.find({}).populate([
-      {
-        path: "user",
-        select: ["avatar", "name", "verified"],
-      },
-    ]);
-    res.json(posts);
-  } catch (error) {
-    next(error);
-  }
-};
-
 module.exports = {
   createPost,
   updatePost,
-  deletePost,
-  getPost,
-  getAllPosts,
 };

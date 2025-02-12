@@ -1,5 +1,5 @@
-const { hash, compare } = require("bcryptjs");
-const { sign } = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const { Schema, model } = require("mongoose");
 
 const UserSchema = new Schema(
@@ -17,18 +17,18 @@ const UserSchema = new Schema(
 );
 UserSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    this.password = await hash(this.password, 10);
+    this.password = await bcrypt.hash(this.password, 10);
     return next();
   }
   return next();
 });
 UserSchema.methods.generateJWT = async function () {
-  return await sign({ id: this._id }, process.env.JWT_SECRET, {
+  return await jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
 };
 UserSchema.methods.comparePassword = async function (enteredPassword) {
-  return await compare(enteredPassword, this.password);
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
 module.exports = model("User", UserSchema);

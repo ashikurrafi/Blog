@@ -92,9 +92,16 @@ const loginUser = async (req, res, next) => {
 
 const userProfileByID = async (req, res, next) => {
   try {
+    // Ensure req.user exists before proceeding
+    if (!req.user) {
+      const error = new Error("User not authenticated");
+      error.statusCode = 401;
+      return next(error);
+    }
+
     const user = await User.findById(req.user._id);
     if (user) {
-      return res.status(201).json({
+      return res.status(200).json({
         _id: user._id,
         avatar: user.avatar,
         name: user.name,
@@ -106,10 +113,10 @@ const userProfileByID = async (req, res, next) => {
     } else {
       const error = new Error("User not found");
       error.statusCode = 404;
-      next(error);
+      return next(error);
     }
   } catch (error) {
-    next(error);
+    next(error); // Pass any errors to the error-handling middleware
   }
 };
 
@@ -200,11 +207,11 @@ const updateProfilePicture = async (req, res, next) => {
 const getAllUsers = async (req, res, next) => {
   try {
     const filter = req.query.searchKeyword;
-    let where = {};
+    const where = {};
     if (filter) {
       where.email = { $regex: filter, $options: "i" };
     }
-    let query = User.find(where);
+    const query = User.find(where);
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * pageSize;
@@ -236,7 +243,7 @@ const getAllUsers = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
   try {
-    let user = await User.findById(req.params.userId);
+    const user = await User.findById(req.params.userId);
 
     if (!user) {
       throw new Error("User no found");

@@ -6,4 +6,5 @@ const PostCategoriesSchema = new Schema(
   },
   { timestamps: true }
 );
+
 module.exports = model("PostCategories", PostCategoriesSchema);

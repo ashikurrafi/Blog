@@ -1,19 +1,9 @@
 const express = require("express");
-const {
-  createPost,
-  updatePost,
-  deletePost,
-  getPost,
-  getAllPosts,
-} = require("../controllers/postControllers");
-const { authGuard, adminGuard } = require("../middlewares/authMiddleware");
 const router = express.Router();
+const { authGuard, adminGuard } = require("../middlewares/authMiddleware");
+const { createPost, updatePost } = require("../controllers/postControllers");
 
-router.route("/").post(authGuard, adminGuard, createPost).get(getAllPosts);
-router
-  .route("/:slug")
-  .put(authGuard, adminGuard, updatePost)
-  .delete(authGuard, adminGuard, deletePost)
-  .get(getPost);
+router.post("/", authGuard, adminGuard, createPost);
+router.put("/:slug", authGuard, adminGuard, updatePost);
 
 module.exports = router;

@@ -11,9 +11,8 @@ const PostSchema = new Schema(
     tags: { type: [String] },
     categories: [{ type: Schema.Types.ObjectId, ref: "PostCategories" }],
   },
-  { timestamps: true, toJSON: { virtuals: true } }
+  { timestamps: true }
 );
-
 PostSchema.virtual("comments", {
   ref: "Comment",
   localField: "_id",

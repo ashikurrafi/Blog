@@ -90,7 +90,7 @@ export const updateProfilePicture = async ({ token, formData }) => {
 
 export const getAllPosts = async () => {
   try {
-    const { data } = await axios.get("/api/v1/posts");
+    const { data } = await axios.get("/api/v1/post");
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)
