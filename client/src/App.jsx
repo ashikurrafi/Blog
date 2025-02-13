@@ -12,7 +12,7 @@ function App() {
         <Routes>
           <Route index path="/" element={<HomePage />} />
           <Route path="/blog/:id" element={<ArticleDetailPage />} />
-        </Routes>{" "}
+        </Routes>
       </div>
     </>
   );
