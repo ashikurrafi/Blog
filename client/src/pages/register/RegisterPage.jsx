@@ -201,7 +201,7 @@ const RegisterPage = () => {
                 Register
               </button>
               <p className="text-sm font-semibold text-[#5a7184]">
-                You have an account?{" "}
+                You have an account?
                 <Link to="/login" className="text-primary">
                   Login now
                 </Link>
