@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Open Sans", "sans-serif", "Roboto", "sans-serif";
+  --font-display: "Open Sans", "Roboto", "sans-serif";
 
   --color-primary: oklch(53.15% 0.1914 259.09);
   --color-dark-light: oklch(53.74% 0.0404 243.51);
