@@ -4,9 +4,9 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+
 import MainLayout from "../../components/MainLayout";
 import { signup } from "../../services/index/users";
-
 import { userActions } from "../../store/reducers/userReducers";
 
 const RegisterPage = () => {
@@ -48,15 +48,16 @@ const RegisterPage = () => {
     },
     mode: "onChange",
   });
+
   const submitHandler = (data) => {
     const { name, email, password } = data;
     mutate({ name, email, password });
   };
+
   const password = watch("password");
 
   return (
     <>
-      {" "}
       <MainLayout>
         <section className="container mx-auto px-5 py-10">
           <div className="w-full max-w-sm mx-auto">
@@ -192,16 +193,10 @@ const RegisterPage = () => {
                   </p>
                 )}
               </div>
-              <Link
-                to="/forget-password"
-                className="text-sm font-semibold text-primary"
-              >
-                Forgot password?
-              </Link>
               <button
                 type="submit"
                 disabled={!isValid || isLoading}
-                className="bg-primary text-white font-bold text-lg py-4 px-8 w-full rounded-lg my-6 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="bg-primary text-white font-bold text-lg py-4 px-8 w-full rounded-lg mb-6 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 Register
               </button>
