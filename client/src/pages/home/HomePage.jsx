@@ -1,4 +1,5 @@
 import MainLayout from "../../components/MainLayout";
+import Articles from "./container/Articles";
 import Hero from "./container/Hero";
 
 const HomePage = () => {
@@ -6,6 +7,7 @@ const HomePage = () => {
     <>
       <MainLayout>
         <Hero />
+        <Articles />
       </MainLayout>
     </>
   );
