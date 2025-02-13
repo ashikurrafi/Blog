@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast";
 import { FaArrowRight } from "react-icons/fa";
 
 import ArticleCard from "../../../components/ArticleCard";
-import { getAllPosts } from "../../../services/index/users";
+import { getAllPosts } from "../../../services/index/posts";
 
 const Articles = () => {
   const { data, isLoading, isError } = useQuery({

@@ -1,17 +1,22 @@
-import { Link } from "react-router-dom";
-import { images } from "../../constants";
+import { useQuery } from "@tanstack/react-query";
+import Bold from "@tiptap/extension-bold";
+import Document from "@tiptap/extension-document";
+import Italic from "@tiptap/extension-italic";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+import { generateHTML } from "@tiptap/html";
+import parse from "html-react-parser";
+import { Link, useParams } from "react-router-dom";
 
+import { useState } from "react";
 import BreadCrumbs from "../../components/BreadCrumbs";
 import CommentsContainer from "../../components/comments/CommentsContainer";
 import MainLayout from "../../components/MainLayout";
 import SocialShareButtons from "../../components/SocialShareButtons";
+import { images, stables } from "../../constants";
 import SuggestedPosts from "../../pages/articleDetail/container/SuggestedPosts";
+import { getSinglePost } from "../../services/index/posts";
 
-const breadCrumbsData = [
-  { name: "Home", link: "/" },
-  { name: "Blog", link: "/blog" },
-  { name: "Article title", link: "/blog/1" },
-];
 const postsData = [
   {
     _id: "1",
@@ -50,6 +55,28 @@ const tagsData = [
 ];
 
 const ArticleDetailPage = () => {
+  const { slug } = useParams();
+
+  const [breadCrumbsData, setbreadCrumbsData] = useState([]);
+
+  const [body, setBody] = useState(null);
+  const { data } = useQuery({
+    queryFn: () => getSinglePost({ slug }),
+    queryKey: ["blog", slug],
+    onSuccess: (data) => {
+      setbreadCrumbsData([
+        { name: "Home", link: "/" },
+        { name: "Blog", link: "/blog" },
+        { name: "Article title", link: `/blog/${data.slug}` },
+      ]);
+      setBody(
+        parse(
+          generateHTML(data?.body, [Bold, Italic, Text, Paragraph, Document])
+        )
+      );
+    },
+  });
+
   return (
     <>
       <MainLayout>
@@ -58,29 +85,28 @@ const ArticleDetailPage = () => {
             <BreadCrumbs data={breadCrumbsData} />
             <img
               className="rounded-xl w-full"
-              src={images.Post1Image}
-              alt="laptop"
+              src={
+                data?.photo
+                  ? stables.UPLOAD_FOLDER_BASE_URL + data?.photo
+                  : images.samplePostImage
+              }
+              alt={data?.title}
             />
-            <Link
-              to="/blog?category=selectedCategory"
-              className="text-primary text-sm font-roboto inline-block mt-4 md:text-base"
-            >
-              EDUCATION
-            </Link>
-            <h1 className="text-xl font-medium font-roboto mt-4 text-dark-hard md:text-[26px]">
-              Help children get better education
-            </h1>
-            <div className="mt-4 text-dark-soft">
-              <p className="leading-7">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Egestas purus viverra accumsan in nisl nisi. Arcu cursus vitae
-                congue mauris rhoncus aenean vel elit scelerisque. In egestas
-                erat imperdiet sed euismod nisi porta lorem mollis. Morbi
-                tristique senectus et netus. Mattis pellentesque id nibh tortor
-                id aliquet lectus proin.
-              </p>
+            <div className="mt-4 flex gap-2">
+              {data?.categories.map((category, index) => (
+                <Link
+                  key={index}
+                  to={`/blog?category=${category.name}`}
+                  className="text-primary text-sm font-roboto inline-block md:text-base"
+                >
+                  {category.name}
+                </Link>
+              ))}
             </div>
+            <h1 className="text-xl font-medium font-roboto mt-4 text-dark-hard md:text-[26px]">
+              {data?.title}
+            </h1>
+            <div className="mt-4 prose prose-sm sm:prose-base">{body}</div>
             <CommentsContainer className="mt-10" logginedUserId="a" />
           </article>
           <div>
