@@ -120,6 +120,7 @@ const ArticleDetailPage = () => {
                 comments={data?.comments}
                 className="mt-10"
                 logginedUserId={userState?.userInfo?._id}
+                postSlug={slug}
               />
             </article>
             <div>
