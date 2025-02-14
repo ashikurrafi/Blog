@@ -64,7 +64,7 @@ const ArticleCard = ({ post, className }) => {
               </div>
             </div>
             <span className="font-bold text-dark-light italic text-sm md:text-base">
-              {new Date(post.createdAt).getDate()}{" "}
+              {new Date(post.createdAt).getDate()}
               {new Date(post.createdAt).toLocaleString("default", {
                 month: "long",
               })}

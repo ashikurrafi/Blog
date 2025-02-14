@@ -102,7 +102,7 @@ const CropEasy = ({ photo, setOpenCrop }) => {
             </button>
           </div>
         </div>
-      </div>{" "}
+      </div>
     </>
   );
 };
