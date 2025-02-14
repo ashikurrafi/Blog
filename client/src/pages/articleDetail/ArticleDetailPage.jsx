@@ -6,6 +6,7 @@ import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import { generateHTML } from "@tiptap/html";
 import parse from "html-react-parser";
+import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
 import { useState } from "react";
@@ -58,6 +59,7 @@ const tagsData = [
 
 const ArticleDetailPage = () => {
   const { slug } = useParams();
+  const userState = useSelector((state) => state.user);
 
   const [breadCrumbsData, setbreadCrumbsData] = useState([]);
 
@@ -114,7 +116,11 @@ const ArticleDetailPage = () => {
                 {data?.title}
               </h1>
               <div className="mt-4 prose prose-sm sm:prose-base">{body}</div>
-              <CommentsContainer className="mt-10" logginedUserId="a" />
+              <CommentsContainer
+                comments={data?.comments}
+                className="mt-10"
+                logginedUserId={userState?.userInfo?._id}
+              />
             </article>
             <div>
               <SuggestedPosts

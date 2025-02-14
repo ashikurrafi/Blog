@@ -41,7 +41,7 @@ const ArticleDetailSkeleton = () => {
             ))}
           </div>
         </div>
-      </section>{" "}
+      </section>
     </>
   );
 };
