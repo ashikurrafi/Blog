@@ -191,7 +191,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
   const isPasswordMatched = await user.comparePassword(password);
 
   if (!isPasswordMatched) {
-    return next(new apiError(401, "Invalid email or password."));
+    throw new apiError(401, "Invalid email or password.");
   }
 
   sendToken(user, 200, "Login successful", res);
@@ -227,7 +227,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   }
 
   const resetToken = user.generateResetPasswordToken();
-  console.log(resetToken);
+  console.log("Token :", resetToken);
   await user.save({
     validateBeforeSave: false,
   });
@@ -246,6 +246,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     const response = new apiResponse(
       200,
       user,
+      resetToken,
       "Reset password token sent to your email."
     );
     res.status(response.statusCode).json(response);
