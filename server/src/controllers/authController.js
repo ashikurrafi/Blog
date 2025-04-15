@@ -127,9 +127,7 @@ const verifyOTP = asyncHandler(async (req, res, next) => {
   });
 
   if (!userAllEntries || userAllEntries.length === 0) {
-    return next(
-      new apiError(400, "No registration attempts found for this email.")
-    );
+    throw new apiError(400, "No registration attempts found for this email.");
   }
 
   let user;
@@ -150,7 +148,7 @@ const verifyOTP = asyncHandler(async (req, res, next) => {
   }
 
   if (user.verificationCode !== Number(otp)) {
-    return next(new apiError(400, "Invalid verification code."));
+    throw new apiError(400, "Invalid verification code.");
   }
 
   const currentTime = Date.now();
@@ -159,7 +157,7 @@ const verifyOTP = asyncHandler(async (req, res, next) => {
   ).getTime();
 
   if (currentTime > verificationCodeExpiry) {
-    return next(new apiError(400, "Verification code has expired."));
+    throw new apiError(400, "Verification code has expired.");
   }
 
   user.accountVerified = true;
@@ -177,7 +175,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(new apiError(400, "Please provide email and password."));
+    throw new apiError(400, "Please provide email and password.");
   }
 
   const user = await User.findOne({ email, accountVerified: true }).select(
@@ -185,7 +183,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
   );
 
   if (!user) {
-    return next(new apiError(401, "No user found."));
+    throw new apiError(401, "No user found.");
   }
 
   const isPasswordMatched = await user.comparePassword(password);
@@ -209,7 +207,7 @@ const getUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user._id).select("-password");
 
   if (!user) {
-    return next(new apiError(404, "User not found."));
+    throw new apiError(404, "User not found.");
   }
 
   const response = new apiResponse(200, user, "User fetched successfully.");
@@ -260,9 +258,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
       validateBeforeSave: false,
     });
 
-    return next(
-      new apiError(500, "Error sending email. Please try again later.")
-    );
+    throw new apiError(500, "Error sending email. Please try again later.");
   }
 });
 
