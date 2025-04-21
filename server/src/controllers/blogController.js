@@ -76,6 +76,40 @@ const updateBlog = asyncHandler(async (req, res) => {
   res.json(response);
 });
 
+// Get all blogs
+const getAllBlogs = asyncHandler(async (req, res, next) => {
+  try {
+    const blogs = await Blog.find();
+    if (!blogs || blogs.length === 0) {
+      throw new apiError(404, "No blogs found");
+    }
+    const response = new apiResponse(200, blogs, "Blogs fetched successfully.");
+    res.json(response);
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+});
+
+// Get a single blog by ID
+const getBlogById = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+
+  if (!id) {
+    throw new apiError(400, "Please provide blog ID");
+  }
+
+  try {
+    const blog = await Blog.findById(id);
+    if (!blog) {
+      throw new apiError(404, "Blog not found");
+    }
+    const response = new apiResponse(200, blog, "Blog fetched successfully.");
+    res.json(response);
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+});
+
 const deleteBlog = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -100,5 +134,7 @@ const deleteBlog = asyncHandler(async (req, res) => {
 module.exports = {
   createBlog,
   updateBlog,
+  getAllBlogs,
+  getBlogById,
   deleteBlog,
 };
