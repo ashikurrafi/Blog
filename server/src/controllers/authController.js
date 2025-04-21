@@ -9,7 +9,16 @@ const sendToken = require("../utils/sendToken");
 const crypto = require("crypto");
 
 const registerUser = asyncHandler(async (req, res, next) => {
-  const { name, email, phone, password } = req.body;
+  const {
+    name,
+    username,
+    gender,
+    dateOfBirth,
+    profilePicture,
+    email,
+    password,
+    phone,
+  } = req.body;
 
   // Validate required fields
   if (!name || !email || !phone || !password) {
@@ -59,9 +68,13 @@ const registerUser = asyncHandler(async (req, res, next) => {
   // Create a new user
   const userData = new User({
     name,
+    username,
+    gender,
+    dateOfBirth,
+    profilePicture,
     email,
-    phone,
     password,
+    phone,
   });
 
   try {

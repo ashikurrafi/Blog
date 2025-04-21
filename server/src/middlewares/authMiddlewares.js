@@ -12,15 +12,15 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
     throw new apiError(400, "User not logged in");
   }
 
-  // const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-  // req.user = await User.findById(decoded.id);
-  // if (!req.user) {
-  //   // User not found case - Token is invalid
-  //   throw new apiError(400, "User not found");
-  // }
+  req.user = await User.findById(decoded.id);
+  if (!req.user) {
+    // User not found case - Token is invalid
+    throw new apiError(400, "User not found");
+  }
 
-  // next();
+  next();
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);

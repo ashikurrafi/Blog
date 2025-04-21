@@ -9,10 +9,31 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      index: true,
+    },
+    gender: {
+      type: String,
+      enum: ["Male", "Female"],
+    },
+    dateOfBirth: {
+      type: String,
+      required: true,
+    },
+    profilePicture: {
+      type: String,
+      default: process.env.DEFAULT_USER_IMAGE,
+    },
     email: {
       type: String,
       required: true,
       unique: true,
+      index: true,
     },
     password: {
       type: String,
@@ -23,6 +44,7 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: true,
+      index: true,
     },
     accountVerified: {
       type: Boolean,
