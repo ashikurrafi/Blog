@@ -1,24 +1,13 @@
 const asyncHandler = require("../error/asyncHandler");
 const apiError = require("../error/apiError");
 const apiResponse = require("../error/apiResponse");
-
 const User = require("../models/userModel");
 const { sendEmail } = require("../utils/sendEmail");
 const sendToken = require("../utils/sendToken");
-
 const crypto = require("crypto");
 
-const registerUser = asyncHandler(async (req, res, next) => {
-  const {
-    name,
-    username,
-    gender,
-    dateOfBirth,
-    profilePicture,
-    email,
-    password,
-    phone,
-  } = req.body;
+const registerUser = asyncHandler(async (req, res) => {
+  const { name, email, password, phone } = req.body;
 
   // Validate required fields
   if (!name || !email || !phone || !password) {
@@ -68,10 +57,6 @@ const registerUser = asyncHandler(async (req, res, next) => {
   // Create a new user
   const userData = new User({
     name,
-    username,
-    gender,
-    dateOfBirth,
-    profilePicture,
     email,
     password,
     phone,
@@ -101,7 +86,7 @@ async function sendVerificationCode(verificationCode, email, user, res) {
   try {
     const message = generateEmailTemplate(verificationCode);
 
-    await sendEmail({ email, subject: "Your Verification Code", message });
+    // await sendEmail({ email, subject: "Your Verification Code", message });
 
     // Respond with success after sending the email
     const response = new apiResponse(
@@ -129,7 +114,7 @@ function generateEmailTemplate(verificationCode) {
 `;
 }
 
-const verifyOTP = asyncHandler(async (req, res, next) => {
+const verifyOTP = asyncHandler(async (req, res) => {
   const { email, otp } = req.body;
 
   const userAllEntries = await User.find({
@@ -248,11 +233,11 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetPasswordUrl} \n\n If you did not request this, please ignore this email and your password will remain unchanged.`;
 
   try {
-    await sendEmail({
-      email: user.email,
-      subject: "Password Reset Token",
-      message,
-    });
+    // await sendEmail({
+    //   email: user.email,
+    //   subject: "Password Reset Token",
+    //   message,
+    // });
 
     const response = new apiResponse(
       200,
