@@ -15,7 +15,7 @@ const authRouter = express.Router(); // Creating an instance of the router
 authRouter.post("/registerUser", registerUser);
 authRouter.post("/verifyOTP", verifyOTP);
 authRouter.post("/loginUser", loginUser);
-authRouter.get("/logoutUser", isAuthenticated, logoutUser);
+authRouter.post("/logoutUser", isAuthenticated, logoutUser);
 authRouter.get("/getUser", isAuthenticated, getUser);
 authRouter.post("/forgotPassword", forgotPassword);
 authRouter.put("/resetPassword/:token", resetPassword);

@@ -1,3 +1,4 @@
+const dotenv = require("dotenv");
 // Importing required modules
 const express = require("express");
 const morgan = require("morgan");
@@ -6,6 +7,7 @@ const cookieParser = require("cookie-parser");
 
 const router = require("./routes"); // Importing the router that defines the API routes
 const removeUnverifiedAccounts = require("./automation/removeUnverifiedAccounts");
+dotenv.config();
 
 const app = express(); // Creating an instance of the Express app
 
@@ -16,11 +18,13 @@ app.use(express.urlencoded({ extended: true })); // Parsing URL-encoded data in 
 app.use(cookieParser()); // Parsing cookies from the request headers
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL], // Allowing requests from any origin
+    origin: process.env.FRONTEND_URL, // Allowing requests from any origin
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
     credentials: true, // Allowing credentials to be included in requests
   })
 ); // Enabling CORS for the application
+
+console.log(process.env.FRONTEND_URL);
 
 // Use the imported router for handling routes
 app.use(router);

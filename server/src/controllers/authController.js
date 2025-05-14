@@ -17,6 +17,15 @@ const registerUser = asyncHandler(async (req, res) => {
     );
   }
 
+  function validateEmail(email) {
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return emailRegex.test(email);
+  }
+
+  if (!validateEmail(email)) {
+    throw new apiError(400, "Invalid email.");
+  }
+
   // Validate phone number format
   function validatePhoneNumber(phone) {
     const phoneRegex = /^\+880\d{10}$/;
@@ -169,7 +178,7 @@ const verifyOTP = asyncHandler(async (req, res) => {
   sendToken(user, 200, "Account Verified", res);
 });
 
-const loginUser = asyncHandler(async (req, res, next) => {
+const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -193,15 +202,24 @@ const loginUser = asyncHandler(async (req, res, next) => {
   sendToken(user, 200, "Login successful", res);
 });
 
-const logoutUser = asyncHandler(async (req, res, next) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-  });
-  res.status(200).json(new apiResponse(200, null, "Successfully logged out"));
+const logoutUser = asyncHandler(async (_, res) => {
+  try {
+    res.clearCookie("token");
+
+    const response = new apiResponse(200, "Successfully logout");
+
+    res.status(response.statusCode).json({
+      success: response.success,
+      message: response.message,
+      data: response.data,
+    });
+  } catch (error) {
+    console.log(error.message);
+    throw new apiError(500, "Something went wrong");
+  }
 });
 
-const getUser = asyncHandler(async (req, res, next) => {
+const getUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
 
   if (!user) {
@@ -212,7 +230,7 @@ const getUser = asyncHandler(async (req, res, next) => {
   res.status(response.statusCode).json(response);
 });
 
-const forgotPassword = asyncHandler(async (req, res, next) => {
+const forgotPassword = asyncHandler(async (req, res) => {
   const user = await User.findOne({
     email: req.body.email,
     accountVerified: true,
@@ -260,7 +278,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   }
 });
 
-const resetPassword = asyncHandler(async (req, res, next) => {
+const resetPassword = asyncHandler(async (req, res) => {
   const { token } = req.params;
 
   const resetPasswordToken = crypto

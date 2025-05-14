@@ -1,0 +1,78 @@
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import regImg from "../assets/register.png";
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+
+const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  return (
+    <>
+      <div className="flex  h-screen md:pt-14 md:h-[760px] ">
+        <div className="hidden md:block">
+          <img src={regImg} alt="" className="w-[750px] pt-15" />
+        </div>
+        <div className="pt-20 justify-center items-center flex-1 px-4 md:px-0">
+          <Card className="w-full max-w-md p-6 shadow-lg rounded-2xl dark:bg-gray-800 dark:border-gray-600">
+            <CardHeader>
+              <CardTitle>
+                <h1 className="text-center text-xl font-semibold">
+Sign in                </h1>
+              </CardTitle>
+              <p className=" mt-2 text-sm font-serif text-center dark:text-gray-300">
+                Enter your details below to sign in your account
+              </p>
+            </CardHeader>
+            <CardContent>
+              <form className="space-y-4">
+                <div className="grid w-full max-w-sm items-center gap-1.5">
+                  <Label htmlFor="email">Email</Label>
+                  <Input type="email" name="email" placeholder="Email" />
+                </div>
+                <div className="relative">
+                  <div className="grid w-full max-w-sm items-center gap-1.5">
+                    <Label htmlFor="email">Password</Label>
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="Password"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-7 text-gray-500"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+                <Button type="submit" className="w-full">
+                  Sign In
+                </Button>
+                <p className="text-center text-gray-600 dark:text-gray-300">
+                  Have no account? &nbsp;
+                  <Link to={"/signup"}>
+                    <span className="underline cursor-pointer hover:text-gray-800 dark:hover:text-gray-100">
+                      Sign up
+                    </span>
+                  </Link>
+                </p>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Login;
