@@ -12,8 +12,55 @@ import {
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 
-const Login = () => {
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+
+const Login = () => {  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
+
+const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (eve) => {
+    const { name, value } = eve.target;
+    setUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (eve) => {
+    eve.preventDefault();
+    console.log("User data being sent:", user); // Log data
+
+    try {
+      const response = await axios.post(
+        `/api/v1/demo/auth/loginUser`,
+        user,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log("Response:", response.data); // Log the response to see if it's success or failure
+      if (response.data.success) {
+        navigate("/");
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error occurred:", error); // Log detailed error info
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  };
 
   return (
     <>
@@ -33,10 +80,11 @@ Sign in                </h1>
               </p>
             </CardHeader>
             <CardContent>
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="email">Email</Label>
-                  <Input type="email" name="email" placeholder="Email" />
+                  <Input type="email" name="email" placeholder="Email"      value={user.email}
+                    onChange={handleChange} />
                 </div>
                 <div className="relative">
                   <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -44,7 +92,8 @@ Sign in                </h1>
                     <Input
                       type={showPassword ? "text" : "password"}
                       name="password"
-                      placeholder="Password"
+                      placeholder="Password"        value={user.password}
+                      onChange={handleChange}
                     />
                   </div>
                   <button
