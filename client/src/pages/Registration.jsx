@@ -49,7 +49,7 @@ const Registration = () => {
       );
       console.log("Response:", response.data); // Log the response to see if it's success or failure
       if (response.data.success) {
-        navigate("/login");
+        navigate("/verifyOTP");
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);

@@ -6,6 +6,7 @@ import Blogs from "./pages/Blogs";
 import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import OTPverification from "./pages/OTPverification";
 import Registration from "./pages/Registration";
 
 const route = createBrowserRouter([
@@ -60,6 +61,15 @@ const route = createBrowserRouter([
       <>
         <Navbar />
         <Registration/>
+      </>
+    ),
+  },
+  {
+    path: "/verifyOTP",
+    element: (
+      <>
+        <Navbar />
+        <OTPverification/>
       </>
     ),
   },
