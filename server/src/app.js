@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 
 const router = require("./routes"); // Importing the router that defines the API routes
 const removeUnverifiedAccounts = require("./automation/removeUnverifiedAccounts");
+
 dotenv.config();
 
 const app = express(); // Creating an instance of the Express app

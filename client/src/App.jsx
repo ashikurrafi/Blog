@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
+import AppLayout from "./components/layout/AppLayout";
 import Navbar from "./components/Navbar";
 import About from "./pages/About";
 import Blogs from "./pages/Blogs";
@@ -11,67 +12,73 @@ import Registration from "./pages/Registration";
 
 const route = createBrowserRouter([
   {
-    path: "/about",
-    element: (
-      <>
-        <Navbar />
-        <About />
-      </>
-    ),
-  },
-  {
-    path: "/blogs",
-    element: (
-      <>
-        <Navbar />
-        <Blogs />
-      </>
-    ),
-  },
-  {
-    path: "/contact",
-    element: (
-      <>
-        <Navbar />
-        <Contact />
-      </>
-    ),
-  },
-  {
     path: "/",
-    element: (
-      <>
-        <Navbar />
-        <Home />
-      </>
-    ),
-  },
-  {
-    path: "/login",
-    element: (
-      <>
-        <Navbar />
-        <Login />
-      </>
-    ),
-  },
-  {
-    path: "/signup",
-    element: (
-      <>
-        <Navbar />
-        <Registration/>
-      </>
-    ),
-  },
-  {
-    path: "/verifyOTP",
-    element: (
-      <>
-        <Navbar />
-        <OTPverification/>
-      </>
-    ),
+    element: <AppLayout />,
+    children: [
+      {
+        path: "/about",
+        element: (
+          <>
+            <Navbar />
+            <About />
+          </>
+        ),
+      },
+      {
+        path: "/blogs",
+        element: (
+          <>
+            <Navbar />
+            <Blogs />
+          </>
+        ),
+      },
+      {
+        path: "/contact",
+        element: (
+          <>
+            <Navbar />
+            <Contact />
+          </>
+        ),
+      },
+      {
+        path: "/",
+        element: (
+          <>
+            <Navbar />
+            <Home />
+          </>
+        ),
+      },
+      {
+        path: "/login",
+        element: (
+          <>
+            <Navbar />
+            <Login />
+          </>
+        ),
+      },
+      {
+        path: "/signup",
+        element: (
+          <>
+            <Navbar />
+            <Registration />
+          </>
+        ),
+      },
+      {
+        path: "/verifyOTP",
+        element: (
+          <>
+            <Navbar />
+            <OTPverification />
+          </>
+        ),
+      },
+    ],
   },
 ]);
 

@@ -1,12 +1,39 @@
+import axios from "axios";
 import { Search } from "lucide-react";
-import { FaMoon } from "react-icons/fa";
-import { Link, NavLink } from "react-router-dom";
+import { FaMoon, FaSun } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import Logo from "../assets/logo.png";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
+import { setUser } from "../redux/authSlice";
+import { toggleTheme } from "../redux/themeSlice";
 
 const Navbar = () => {
-  const user = false;
+  const { user } = useSelector((store) => store.auth);
+  const { theme } = useSelector((store) => store.theme);
+
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+  const logoutHandler = async () => {
+    try {
+      const response = await axios.post(`/api/v1/demo/auth/logoutUser`, null, {
+        withCredentials: true,
+      });
+      if (response.data.success) {
+        navigate("/");
+        dispatch(setUser(null));
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
 
   return (
     <>
@@ -44,11 +71,18 @@ const Navbar = () => {
               </NavLink>
             </ul>
             <div className="flex">
-              <Button className="">
-                <FaMoon />
+              <Button onClick={() => dispatch(toggleTheme())}>
+                {theme === "light" ? <FaMoon /> : <FaSun />}{" "}
               </Button>
               {user ? (
-                <div></div>
+                <div className="ml-7 flex gap-3 items-center">
+                  <Avatar>
+                    {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
+                    <AvatarImage src={user?.avatar} />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                  <Button onClick={logoutHandler}>Logout</Button>
+                </div>
               ) : (
                 <div className="ml-7 md:flex gap-2 ">
                   <Link to={"/login"}>

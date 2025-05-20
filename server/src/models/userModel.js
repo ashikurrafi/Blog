@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       select: false,
     },
+    profileImage: {
+      type: String,
+      default: process.env.DEFAULT_USER_IMAGE,
+    },
     phone: {
       type: String,
       required: true,

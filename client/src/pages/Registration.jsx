@@ -1,8 +1,7 @@
-import axios from "axios";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import regImg from "../assets/register.png";
 import { Button } from "../components/ui/button";
 import {
@@ -13,9 +12,18 @@ import {
 } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { setLoading } from "../redux/authSlice";
+
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Registration = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { loading } = useSelector((store) => store.auth);
+
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState({
     name: "",
@@ -37,6 +45,8 @@ const Registration = () => {
     console.log("User data being sent:", user); // Log data
 
     try {
+      dispatch(setLoading(true));
+
       const response = await axios.post(
         `/api/v1/demo/auth/registerUser`,
         user,
@@ -57,6 +67,8 @@ const Registration = () => {
     } catch (error) {
       console.error("Error occurred:", error); // Log detailed error info
       toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -130,7 +142,14 @@ const Registration = () => {
                   </button>
                 </div>
                 <Button type="submit" className="w-full">
-                  Sign Up
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                      Signing up
+                    </>
+                  ) : (
+                    "Sign up"
+                  )}
                 </Button>
                 <p className="text-center text-gray-600 dark:text-gray-300">
                   Already have an account? &nbsp;

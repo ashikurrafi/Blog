@@ -1,5 +1,6 @@
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import regImg from "../assets/register.png";
 import { Button } from "../components/ui/button";
@@ -11,24 +12,29 @@ import {
 } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { setLoading, setUser } from "../redux/authSlice";
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-
-const Login = () => {  const navigate = useNavigate();
-
+const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
-const [user, setUser] = useState({
+  const { loading } = useSelector((store) => store.auth);
+
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const [input, setInput] = useState({
     email: "",
     password: "",
   });
 
   const handleChange = (eve) => {
     const { name, value } = eve.target;
-    setUser((prev) => ({
+    setInput((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -36,22 +42,20 @@ const [user, setUser] = useState({
 
   const handleSubmit = async (eve) => {
     eve.preventDefault();
-    console.log("User data being sent:", user); // Log data
+    console.log("User data being sent:", input); // Log data
 
     try {
-      const response = await axios.post(
-        `/api/v1/demo/auth/loginUser`,
-        user,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
+      dispatch(setLoading(true));
+      const response = await axios.post(`/api/v1/demo/auth/loginUser`, input, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       console.log("Response:", response.data); // Log the response to see if it's success or failure
       if (response.data.success) {
         navigate("/");
+        dispatch(setUser(response.data.user));
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
@@ -59,6 +63,8 @@ const [user, setUser] = useState({
     } catch (error) {
       console.error("Error occurred:", error); // Log detailed error info
       toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -72,8 +78,7 @@ const [user, setUser] = useState({
           <Card className="w-full max-w-md p-6 shadow-lg rounded-2xl dark:bg-gray-800 dark:border-gray-600">
             <CardHeader>
               <CardTitle>
-                <h1 className="text-center text-xl font-semibold">
-Sign in                </h1>
+                <h1 className="text-center text-xl font-semibold">Sign in </h1>
               </CardTitle>
               <p className=" mt-2 text-sm font-serif text-center dark:text-gray-300">
                 Enter your details below to sign in your account
@@ -83,8 +88,13 @@ Sign in                </h1>
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="email">Email</Label>
-                  <Input type="email" name="email" placeholder="Email"      value={user.email}
-                    onChange={handleChange} />
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={input.email}
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="relative">
                   <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -92,7 +102,8 @@ Sign in                </h1>
                     <Input
                       type={showPassword ? "text" : "password"}
                       name="password"
-                      placeholder="Password"        value={user.password}
+                      placeholder="Password"
+                      value={input.password}
                       onChange={handleChange}
                     />
                   </div>
@@ -105,7 +116,14 @@ Sign in                </h1>
                   </button>
                 </div>
                 <Button type="submit" className="w-full">
-                  Sign In
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                      Loging in
+                    </>
+                  ) : (
+                    "Login"
+                  )}
                 </Button>
                 <p className="text-center text-gray-600 dark:text-gray-300">
                   Have no account? &nbsp;
