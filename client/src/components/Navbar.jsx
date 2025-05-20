@@ -1,12 +1,24 @@
 import axios from "axios";
-import { Search } from "lucide-react";
-import { FaMoon, FaSun } from "react-icons/fa";
+import { ChartColumnBig, LogOut, Search, User } from "lucide-react";
+// import {  Cog } from "lucide-react";
+import { FaMoon, FaRegEdit, FaSun } from "react-icons/fa";
+import { LiaCommentSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Logo from "../assets/logo.png";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
 import { Input } from "../components/ui/input";
 import { setUser } from "../redux/authSlice";
 import { toggleTheme } from "../redux/themeSlice";
@@ -72,15 +84,67 @@ const Navbar = () => {
             </ul>
             <div className="flex">
               <Button onClick={() => dispatch(toggleTheme())}>
-                {theme === "light" ? <FaMoon /> : <FaSun />}{" "}
+                {theme === "light" ? <FaMoon /> : <FaSun />}
               </Button>
               {user ? (
                 <div className="ml-7 flex gap-3 items-center">
-                  <Avatar>
-                    {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
-                    <AvatarImage src={user?.avatar} />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Avatar className="cursor-pointer">
+                        <AvatarImage src={user.profileImage} />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56 dark:bg-gray-800">
+                      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem
+                          onClick={() => navigate("/dashboard/profile")}
+                        >
+                          <User />
+                          <span>Profile</span>
+                          <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => navigate("/dashboard/your-blog")}
+                        >
+                          <ChartColumnBig />
+                          <span>Your Blog</span>
+                          <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        {/* <DropdownMenuItem>
+                          <Cog />
+                          <span>Settings</span>
+                          <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                        </DropdownMenuItem> */}
+                        <DropdownMenuItem
+                          onClick={() => navigate("/dashboard/comments")}
+                        >
+                          <LiaCommentSolid />
+                          <span>Comments</span>
+                          <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem
+                          onClick={() => navigate("/dashboard/write-blog")}
+                        >
+                          <FaRegEdit />
+                          <span>Write Blog</span>
+                          <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+
+                      <DropdownMenuSeparator />
+
+                      <DropdownMenuItem onClick={logoutHandler}>
+                        <LogOut />
+                        <span>Log out</span>
+                        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
                   <Button onClick={logoutHandler}>Logout</Button>
                 </div>
               ) : (
