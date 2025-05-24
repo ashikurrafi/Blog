@@ -1,4 +1,9 @@
+import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { Avatar, AvatarImage } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
+import { Card } from "../components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -12,13 +17,11 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 
-import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import userImg from "../assets/userImg.png";
-import { Avatar, AvatarImage } from "../components/ui/avatar";
-import { Card } from "../components/ui/card";
-
 const Profile = () => {
+  const { user } = useSelector((store) => store.auth);
+
+  
+
   return (
     <>
       <div className="pt-20 md:ml-[320px] md:h-screen">
@@ -27,7 +30,7 @@ const Profile = () => {
             {/* image section */}
             <div className="flex flex-col items-center justify-center md:w-[400px]">
               <Avatar className="w-40 h-40 border-2">
-                <AvatarImage src={userImg} />
+                <AvatarImage src={user?.profileImage}  />
               </Avatar>
 
               <h1 className="text-center font-semibold text-xl text-gray-700 dark:text-gray-300 my-3">
@@ -51,10 +54,10 @@ const Profile = () => {
 
             <div>
               <h1 className="font-bold text-center md:text-start text-4xl mb-7">
-                Welcome !
+                Welcome {user?.name}
               </h1>
               <p className="">
-                <span className="font-semibold">Email : </span>
+                <span className="font-semibold">Email : {user?.email}</span>
               </p>
               <div className="flex flex-col gap-2 items-start justify-start my-5">
                 <Label className="">About Me</Label>
@@ -101,16 +104,16 @@ const Profile = () => {
                     </div>
                   </div>
                   <div>
-                      <Label htmlFor="name" className="text-right">
-                        Profile picture
-                      </Label>
-                      <Input
-                        id="file"
-                        type="file"
-                        accept="image/*"
-                        className="w-[277px]"
-                      />
-                    </div>
+                    <Label htmlFor="name" className="text-right">
+                      Profile picture
+                    </Label>
+                    <Input
+                      id="file"
+                      type="file"
+                      accept="image/*"
+                      className="w-[277px]"
+                    />
+                  </div>
                   <DialogFooter>
                     <Button type="submit">Save changes</Button>
                   </DialogFooter>

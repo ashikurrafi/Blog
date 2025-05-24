@@ -159,9 +159,10 @@ const verifyOTP = asyncHandler(async (req, res) => {
   }
 
   const currentTime = Date.now();
-  const verificationCodeExpiry = new Date(
-    user.verificationCodeExpiry
-  ).getTime();
+  // const verificationCodeExpiry = new Date(
+  //   user.verificationCodeExpiry
+  // ).getTime();
+  const verificationCodeExpiry = user.verificationCodeExpiry.getTime();
 
   if (currentTime > verificationCodeExpiry) {
     throw new apiError(400, "Verification code has expired.");
@@ -217,17 +218,6 @@ const logoutUser = asyncHandler(async (_, res) => {
     console.log(error.message);
     throw new apiError(500, "Something went wrong");
   }
-});
-
-const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id).select("-password");
-
-  if (!user) {
-    throw new apiError(404, "User not found.");
-  }
-
-  const response = new apiResponse(200, user, "User fetched successfully.");
-  res.status(response.statusCode).json(response);
 });
 
 const forgotPassword = asyncHandler(async (req, res) => {
@@ -315,7 +305,6 @@ module.exports = {
   verifyOTP,
   loginUser,
   logoutUser,
-  getUser,
   forgotPassword,
   resetPassword,
 };
