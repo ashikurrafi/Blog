@@ -15,7 +15,6 @@ const getUser = asyncHandler(async (req, res, next) => {
 });
 
 const updateProfile = asyncHandler(async (req, res) => {
-<<<<<<< HEAD
   const userId = req.params.id;
   const { name, phone } = req.body;
   const profileImage = req.file.filename;
@@ -27,15 +26,6 @@ const updateProfile = asyncHandler(async (req, res) => {
   const newUser = { name, phone, profileImage };
 
   const updatedUser = await User.findByIdAndUpdate(userId, newUser, {
-=======
-  const { name, phone } = req.body;
-  const profileImage = req.file ? req.file.path : undefined; // Path to the uploaded file
-
-  const newUser = { name, phone, profileImage };
-  console.log(newUser);
-
-  const updatedUser = await User.findByIdAndUpdate(req.user._id, newUser, {
->>>>>>> c6812db3b179d448f336322f872876fbbe7125f1
     new: true,
     runValidators: true,
   });
