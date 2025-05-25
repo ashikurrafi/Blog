@@ -26,6 +26,8 @@ import { toggleTheme } from "../redux/themeSlice";
 const Navbar = () => {
   const { user } = useSelector((store) => store.auth);
   const { theme } = useSelector((store) => store.theme);
+  const baseUrl = import.meta.env.VITE_SERVER_URL;
+  const defaultProfileImage = import.meta.env.VITE_DEFAULT_IMAGE;
 
   const dispatch = useDispatch();
 
@@ -91,7 +93,16 @@ const Navbar = () => {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Avatar className="cursor-pointer">
-                        <AvatarImage src={user.profileImage} />
+                        {/* <AvatarImage src={`${baseUrl}/images/${user.profileImage}`} /> */}
+                        {!user?.profileImage ? (
+                          <AvatarImage
+                            src={`${baseUrl}/images/${user.profileImage}`}
+                          />
+                        ) : (
+                          <AvatarImage
+                            src={`${baseUrl}/images/${defaultProfileImage}`}
+                          />
+                        )}
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
                     </DropdownMenuTrigger>

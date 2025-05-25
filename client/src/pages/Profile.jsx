@@ -1,6 +1,6 @@
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Avatar, AvatarImage } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
@@ -18,15 +18,12 @@ import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 
 const Profile = () => {
-  const { userId } = useParams();
-
   const baseUrl = import.meta.env.VITE_SERVER_URL;
-  
-  console.log(userId);
+  const defaultProfileImage = import.meta.env.VITE_DEFAULT_IMAGE;
+
   const { user } = useSelector((store) => store.auth);
-  
+
   console.log("Current user state:", user);
-  console.log("Base URL:", `${baseUrl}/images/${user.profileImage}`);
 
   return (
     <>
@@ -36,8 +33,17 @@ const Profile = () => {
             {/* image section */}
             <div className="flex flex-col items-center justify-center md:w-[400px]">
               <Avatar className="w-40 h-40 border-2">
-                {/* <AvatarImage src={user?.profileImage} /> */}
-                <AvatarImage src={`${baseUrl}/images/${user.profileImage}`} />
+                {/* <AvatarImage src={`${baseUrl}/images/${user.profileImage}`} /> */}
+
+                {!user?.profileImage ? (
+                  <AvatarImage src={`${baseUrl}/images/${user.profileImage}`} />
+                ) : (
+                  <AvatarImage
+                    src={`${baseUrl}/images/${defaultProfileImage}`}
+                  />
+                )}
+
+                {/* <AvatarImage src={`${baseUrl}/images/${user.profileImage}`} /> */}
               </Avatar>
 
               <h1 className="text-center font-semibold text-xl text-gray-700 dark:text-gray-300 my-3">
