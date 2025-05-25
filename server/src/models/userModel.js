@@ -23,12 +23,17 @@ const userSchema = new mongoose.Schema(
     },
     profileImage: {
       type: String,
-      default: process.env.DEFAULT_USER_IMAGE,
+      default: "",
     },
     phone: {
       type: String,
       required: true,
       index: true,
+    },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
     },
     accountVerified: {
       type: Boolean,

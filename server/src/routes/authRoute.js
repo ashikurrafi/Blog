@@ -4,7 +4,6 @@ const {
   verifyOTP,
   loginUser,
   logoutUser,
-  getUser,
   forgotPassword,
   resetPassword,
 } = require("../controllers/authController");
@@ -16,7 +15,6 @@ authRouter.post("/registerUser", registerUser);
 authRouter.post("/verifyOTP", verifyOTP);
 authRouter.post("/loginUser", loginUser);
 authRouter.post("/logoutUser", isAuthenticated, logoutUser);
-authRouter.get("/getUser", isAuthenticated, getUser);
 authRouter.post("/forgotPassword", forgotPassword);
 authRouter.put("/resetPassword/:token", resetPassword);
 // Exporting the router so it can be used in other files

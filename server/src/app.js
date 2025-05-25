@@ -25,7 +25,9 @@ app.use(
   })
 ); // Enabling CORS for the application
 
-console.log(process.env.FRONTEND_URL);
+app.use(express.static("src/public"));
+
+// ...existing code...
 
 // Use the imported router for handling routes
 app.use(router);
