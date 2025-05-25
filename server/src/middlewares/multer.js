@@ -4,7 +4,11 @@ const path = require("path");
 // Define storage configuration for multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+<<<<<<< HEAD
     cb(null, "src/public/images"); // Save files in 'public/images'
+=======
+    cb(null, "src/public"); // Save files in 'src/public'
+>>>>>>> c6812db3b179d448f336322f872876fbbe7125f1
   },
   filename: function (req, file, cb) {
     // Assuming req.user.name contains the user's name
