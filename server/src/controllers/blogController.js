@@ -6,7 +6,10 @@ import blogModel from "../models/blogModel.js";
 export const createBlog = asyncHandler(async (req, res) => {
   const { title, content } = req.body;
   const imagePath = req.file.filename;
-  console.log(imagePath);
+
+  if (!title || !content || !req.file) {
+    throw new apiError(400, "Title, content, and image are required");
+  }
   const createdBlog = await blogModel.create({
     title,
     content,
@@ -27,4 +30,21 @@ export const createBlog = asyncHandler(async (req, res) => {
       true
     )
   );
+});
+
+export const deleteBlog = asyncHandler(async (req, res) => {
+  const blogId = req.params.id;
+
+  if (!blogId) {
+    throw new apiError(400, "Blog ID is required");
+  }
+
+  const blog = await blogModel.findById(blogId);
+  if (!blog) {
+    throw new apiError(404, "Blog not found");
+  }
+
+  await blogModel.findByIdAndDelete(blogId);
+
+  res.json(new apiResponse(200, null, "Blog deleted successfully", true));
 });

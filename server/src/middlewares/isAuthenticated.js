@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import apiError from "../error/apiError.js";
 import asyncHandler from "../error/asyncHandler.js";
 import userModel from "../models/userModel.js";
 
@@ -6,9 +7,7 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return res.json(
-      new apiResponse(404, null, "Access denied. No token provided.", false)
-    );
+    throw new apiError(404, "Access denied. No token provided.");
   }
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -16,7 +15,7 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
   const user = await userModel.findById(decoded.userId);
 
   if (!user) {
-    return res.json(new apiResponse(401, null, "User not found", false));
+    throw new apiError(401, "User not found");
   }
 
   req.user = user;
