@@ -1,12 +1,11 @@
-const dotenv = require("dotenv");
 // Importing required modules
-const express = require("express");
-const morgan = require("morgan");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import morgan from "morgan";
 
-const router = require("./routes"); // Importing the router that defines the API routes
-const removeUnverifiedAccounts = require("./automation/removeUnverifiedAccounts");
+import router from "./routes/index.js"; // Importing the router for handling routes
 
 dotenv.config();
 
@@ -32,12 +31,10 @@ app.use(express.static("src/public"));
 // Use the imported router for handling routes
 app.use(router);
 
-removeUnverifiedAccounts();
-
 // Fallback route for undefined routes (404 Not Found)
 app.use(/(.*)/, (req, res) => {
   res.status(404).json({ message: "Route not found" }); // Respond with 404 and a message
 });
 
 // Export the app instance for use in other files
-module.exports = app;
+export default app;

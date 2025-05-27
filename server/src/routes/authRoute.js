@@ -1,21 +1,12 @@
-const express = require("express"); // Importing express to create the API router
-const {
-  registerUser,
-  verifyOTP,
-  loginUser,
-  logoutUser,
-  forgotPassword,
-  resetPassword,
-} = require("../controllers/authController");
-const isAuthenticated = require("../middlewares/authMiddlewares");
+import express from "express"; // Importing express to create the API router
+
 const authRouter = express.Router(); // Creating an instance of the router
 
 // Defining a GET route at the root of the /api/v1/demo path
-authRouter.post("/registerUser", registerUser);
-authRouter.post("/verifyOTP", verifyOTP);
-authRouter.post("/loginUser", loginUser);
-authRouter.post("/logoutUser", isAuthenticated, logoutUser);
-authRouter.post("/forgotPassword", forgotPassword);
-authRouter.put("/resetPassword/:token", resetPassword);
+authRouter.post("/registerUser", (req, res) => {
+  res.status(200).json({
+    message: "User registered successfully",
+  });
+});
 // Exporting the router so it can be used in other files
-module.exports = authRouter;
+export default authRouter;

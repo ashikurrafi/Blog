@@ -1,7 +1,7 @@
 // Importing required modules
-const dotenv = require("dotenv");
-const app = require("./app");
-const connectDataBase = require("./config/db");
+import dotenv from "dotenv";
+import app from "./app.js";
+import connectDataBase from "./config/db.js";
 
 // Load environment variables from the .env file
 dotenv.config();
