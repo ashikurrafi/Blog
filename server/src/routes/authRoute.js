@@ -1,5 +1,9 @@
 import express from "express"; // Importing express to create the API router
-import { loginUser, registerUser } from "../controllers/authController.js";
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+} from "../controllers/authController.js";
 // import upload from "../middlewares/multer.js";
 
 const authRouter = express.Router(); // Creating an instance of the router
@@ -8,6 +12,7 @@ const authRouter = express.Router(); // Creating an instance of the router
 // authRouter.post("/registerUser", upload.single("profilePicture"), registerUser);
 authRouter.post("/registerUser", registerUser);
 authRouter.post("/loginUser", loginUser);
+authRouter.post("/logoutUser", logoutUser);
 
 // Exporting the router so it can be used in other files
 export default authRouter;
