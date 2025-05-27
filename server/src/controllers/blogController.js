@@ -48,3 +48,15 @@ export const deleteBlog = asyncHandler(async (req, res) => {
 
   res.json(new apiResponse(200, null, "Blog deleted successfully", true));
 });
+
+export const getAllBlogs = asyncHandler(async (req, res) => {
+  const blogs = await blogModel.find().sort({ createdAt: -1 });
+
+  if (!blogs || blogs.length === 0) {
+    throw new apiError(404, "No blogs found");
+  }
+
+  res.json(
+    new apiResponse(200, { blogs }, "Blogs retrieved successfully", true)
+  );
+});

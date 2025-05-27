@@ -1,5 +1,9 @@
 import express from "express"; // Importing express to create the API router
-import { createBlog, deleteBlog } from "../controllers/blogController.js";
+import {
+  createBlog,
+  deleteBlog,
+  getAllBlogs,
+} from "../controllers/blogController.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import upload from "../middlewares/multer.js";
 
@@ -13,6 +17,7 @@ blogRouter.post(
   createBlog
 );
 blogRouter.delete("/deleteBlog/:id", isAuthenticated, deleteBlog);
+blogRouter.post("/getAllBlogs", getAllBlogs);
 
 // Exporting the router so it can be used in other files
 export default blogRouter;
