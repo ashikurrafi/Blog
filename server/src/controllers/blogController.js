@@ -107,6 +107,17 @@ export const updateBlog = asyncHandler(async (req, res) => {
   }
 
   if (req.file) {
+    const oldImage = updatedBlog.image;
+
+    if (oldImage) {
+      const imagePath = path.join("src/public/images", oldImage);
+      fs.unlink(imagePath, (err) => {
+        if (err) {
+          console.error("Error deleting old image:", err);
+        }
+      });
+    }
+
     updatedBlog.image = req.file.filename;
   }
 
