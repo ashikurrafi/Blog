@@ -10,14 +10,17 @@ const blogSchema = new mongoose.Schema(
     //   required: true,
     // },
     author: {
-      trype: String,
+      type: String,
     },
     image: {
       type: String,
     },
-    comments: {
-      type: String,
-    },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   { timestamps: true }
 );

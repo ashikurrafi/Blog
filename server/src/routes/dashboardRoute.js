@@ -1,8 +1,10 @@
 import express from "express"; // Importing express to create the API router
 import {
   deleteBlog,
+  deleteComment,
   deleteUser,
   getAllBlogs,
+  getAllComments,
   getAllData,
   getAllUsers,
 } from "../controllers/dashboardController.js";
@@ -16,9 +18,8 @@ dashboardRouter.get("/blogs", isAdmin, getAllBlogs);
 dashboardRouter.get("/users", isAdmin, getAllUsers);
 dashboardRouter.delete("/delete/user/:id", isAdmin, deleteUser);
 dashboardRouter.delete("/delete/blog/:id", isAdmin, deleteBlog);
-
-// dashboardRouter.get("/comments", isAdmin, getAllComments);
-// dashboardRouter.delete("/delete/comment/:id", isAdmin, deleteComment);
+dashboardRouter.get("/comments", isAdmin, getAllComments);
+dashboardRouter.delete("/delete/comment/:id", isAdmin, deleteComment);
 
 // Exporting the router so it can be used in other files
 export default dashboardRouter;

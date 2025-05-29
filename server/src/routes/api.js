@@ -1,6 +1,7 @@
 import express from "express"; // Importing express to create the API router
 import authRouter from "./authRoute.js";
 import blogRouter from "./blogRoute.js";
+import commentRouter from "./commentRoute.js";
 import dashboardRouter from "./dashboardRoute.js";
 
 const router = express.Router(); // Creating an instance of the router
@@ -10,6 +11,7 @@ const router = express.Router(); // Creating an instance of the router
 router.use("/auth", authRouter);
 router.use("/blog", blogRouter);
 router.use("/dashboard", dashboardRouter);
+router.use("/comments", commentRouter);
 
 // Exporting the router so it can be used in other files
 export default router;

@@ -4,11 +4,13 @@ import apiError from "../error/apiError.js";
 import apiResponse from "../error/apiResponse.js";
 import asyncHandler from "../error/asyncHandler.js";
 import blogModel from "../models/blogModel.js";
+import commentModel from "../models/commentModel.js";
 import userModel from "../models/userModel.js";
 
 export const getAllData = asyncHandler(async (req, res) => {
   const users = await userModel.find();
   const blogs = await blogModel.find();
+  const comments = await commentModel.find();
 
   if (!users) {
     throw new apiError(400, "No users found");
@@ -18,12 +20,17 @@ export const getAllData = asyncHandler(async (req, res) => {
     throw new apiError(400, "No blogs found");
   }
 
+  if (!comments) {
+    throw new apiError(400, "No comments found");
+  }
+
   res.json(
     new apiResponse({
       status: "success",
       data: {
         blogs: blogs,
         users: users,
+        comments: comments,
       },
       message: "All data fetched successfully",
     })
@@ -129,20 +136,33 @@ export const deleteUser = asyncHandler(async (req, res) => {
 });
 
 export const getAllComments = asyncHandler(async (req, res) => {
+  const comments = await commentModel.find();
+  if (!comments) {
+    throw new apiError(400, "No comments found");
+  }
+
   res.json(
     new apiResponse({
       status: "success",
-      data: [],
+      data: { comments: comments },
       message: "All comments fetched successfully",
     })
   );
 });
 
 export const deleteComment = asyncHandler(async (req, res) => {
+  const commentId = req.params.id;
+
+  if (!commentId) {
+    throw new apiError(400, "Comment ID is required");
+  }
+
+  const comment = await commentModel.findByIdAndDelete(commentId);
+
   res.json(
     new apiResponse({
       status: "success",
-      data: null,
+      data: { Comment: comment },
       message: "Comment deleted successfully",
     })
   );
