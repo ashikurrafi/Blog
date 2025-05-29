@@ -6,6 +6,7 @@ import Layout from "./layout/Layout";
 import UserLayout from "./layout/UserLayout";
 import AddBlog from "./pages/AddBlog";
 import AdminDashboard from "./pages/AdminDashboard";
+import AllBlogs from "./pages/AllBlogs";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ManageUser from "./pages/ManageUser";
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         index: true, // /
         element: <Home />,
+      },
+      {
+        path: "allblogs", // /allblogs
+        element: <AllBlogs />,
       },
       {
         path: "login", // /login
