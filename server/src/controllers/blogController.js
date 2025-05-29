@@ -132,3 +132,26 @@ export const updateBlog = asyncHandler(async (req, res) => {
     )
   );
 });
+
+export const getBlogById = asyncHandler(async (req, res) => {
+  const blogId = req.params.id;
+
+  if (!blogId) {
+    throw new apiError(400, "Blog ID is required");
+  }
+
+  const blog = await blogModel.findById(blogId).populate({
+    path: "comments",
+    populate: {
+      path: "userId",
+    },
+  });
+
+  if (!blog) {
+    throw new apiError(404, "Blog not found");
+  }
+
+  res.json(
+    new apiResponse(200, { Blog: blog }, "Blog retrieved successfully", true)
+  );
+});

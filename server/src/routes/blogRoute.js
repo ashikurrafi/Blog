@@ -3,6 +3,7 @@ import {
   createBlog,
   deleteBlog,
   getAllBlogs,
+  getBlogById,
   updateBlog,
 } from "../controllers/blogController.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
@@ -25,6 +26,7 @@ blogRouter.patch(
   upload.single("imageBlog"),
   updateBlog
 );
+blogRouter.get("/getBlogById/:id", getBlogById);
 
 // Exporting the router so it can be used in other files
 export default blogRouter;
