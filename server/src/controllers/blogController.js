@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import apiError from "../error/apiError.js";
 import apiResponse from "../error/apiResponse.js";
 import asyncHandler from "../error/asyncHandler.js";
@@ -5,6 +7,7 @@ import blogModel from "../models/blogModel.js";
 
 export const createBlog = asyncHandler(async (req, res) => {
   const { title, content } = req.body;
+
   const imagePath = req.file.filename;
 
   if (!title || !content || !req.file) {
@@ -26,7 +29,7 @@ export const createBlog = asyncHandler(async (req, res) => {
   res.json(
     new apiResponse(
       200,
-      { blog: createdBlog },
+      { Blog: createdBlog },
       "Blog created successfully",
       true
     )
@@ -45,9 +48,26 @@ export const deleteBlog = asyncHandler(async (req, res) => {
     throw new apiError(404, "Blog not found");
   }
 
+  if (blog.image) {
+    const imagePath = path.join("src/public/images", blog.image);
+    console.log(imagePath);
+    fs.unlink(imagePath, (err) => {
+      if (err) {
+        console.error("Error deleting image:", err);
+      }
+    });
+  }
+
   await blogModel.findByIdAndDelete(blogId);
 
-  res.json(new apiResponse(200, null, "Blog deleted successfully", true));
+  res.json(
+    new apiResponse(
+      200,
+      { DeletedBlog: blog },
+      "Blog deleted successfully",
+      true
+    )
+  );
 });
 
 export const getAllBlogs = asyncHandler(async (req, res) => {
@@ -58,7 +78,12 @@ export const getAllBlogs = asyncHandler(async (req, res) => {
   }
 
   res.json(
-    new apiResponse(200, { blogs }, "Blogs retrieved successfully", true)
+    new apiResponse(
+      200,
+      { Allblogs: blogs },
+      "Blogs retrieved successfully",
+      true
+    )
   );
 });
 
@@ -88,6 +113,11 @@ export const updateBlog = asyncHandler(async (req, res) => {
   await updatedBlog.save();
 
   res.json(
-    new apiResponse(200, updatedBlog, "Blog updated successfully", true)
+    new apiResponse(
+      200,
+      { UpdatedBlog: updatedBlog },
+      "Blog updated successfully",
+      true
+    )
   );
 });

@@ -7,8 +7,6 @@ import userModel from "../models/userModel.js";
 export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, phone } = req.body;
 
-  const profilePicture = req.file ? req.filename : null;
-
   if (!name || !email || !password || !phone) {
     throw new apiError(400, "All fields are required");
   }
@@ -24,7 +22,6 @@ export const registerUser = asyncHandler(async (req, res) => {
     email,
     password,
     phone,
-    profilePicture,
   });
 
   await newUser.save();
