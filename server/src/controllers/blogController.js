@@ -10,6 +10,7 @@ export const createBlog = asyncHandler(async (req, res) => {
   if (!title || !content || !req.file) {
     throw new apiError(400, "Title, content, and image are required");
   }
+
   const createdBlog = await blogModel.create({
     title,
     content,
@@ -58,5 +59,35 @@ export const getAllBlogs = asyncHandler(async (req, res) => {
 
   res.json(
     new apiResponse(200, { blogs }, "Blogs retrieved successfully", true)
+  );
+});
+
+export const updateBlog = asyncHandler(async (req, res) => {
+  const { title, content } = req.body;
+
+  const blogId = req.params.id;
+
+  const updatedBlog = await blogModel.findById(blogId);
+
+  if (!updatedBlog) {
+    throw new apiError(404, "Blog not found");
+  }
+
+  if (title) {
+    updatedBlog.title = title;
+  }
+
+  if (content) {
+    updatedBlog.content = content;
+  }
+
+  if (req.file) {
+    updatedBlog.image = req.file.filename;
+  }
+
+  await updatedBlog.save();
+
+  res.json(
+    new apiResponse(200, updatedBlog, "Blog updated successfully", true)
   );
 });

@@ -3,6 +3,7 @@ import {
   createBlog,
   deleteBlog,
   getAllBlogs,
+  updateBlog,
 } from "../controllers/blogController.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import upload from "../middlewares/multer.js";
@@ -17,7 +18,13 @@ blogRouter.post(
   createBlog
 );
 blogRouter.delete("/deleteBlog/:id", isAuthenticated, deleteBlog);
-blogRouter.post("/getAllBlogs", getAllBlogs);
+blogRouter.get("/getAllBlogs", getAllBlogs);
+blogRouter.patch(
+  "/updateBlog/:id",
+  isAuthenticated,
+  upload.single("imageBlog"),
+  updateBlog
+);
 
 // Exporting the router so it can be used in other files
 export default blogRouter;
