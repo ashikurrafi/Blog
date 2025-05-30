@@ -8,9 +8,9 @@ const About = () => {
         <div className="mx-auto max-w-5xl px-6">
           <div className="mx-auto max-w-2xl text-center">
             <blockquote>
-                <h1 className="text-balance text-3xl font-semibold md:text-4xl pb-5">
-              About me
-            </h1>
+              <h1 className="text-center text-4xl font-semibold lg:text-5xl pb-5">
+                About me
+              </h1>
               <p className="text-lg font-medium sm:text-xl md:text-3xl">
                 I’m a Computer Science and Engineering graduate passionate about
                 creating innovative tech solutions. Currently diving into

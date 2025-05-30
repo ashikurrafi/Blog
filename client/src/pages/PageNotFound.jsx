@@ -12,7 +12,7 @@ const PageNotFound = () => {
             </h2>
             <p className="mt-4">Page not found</p>
 
-            <div className="mt-12 flex flex-wrap justify-center gap-4">
+            <div className="mt-6 flex flex-wrap justify-center gap-2">
               <Button asChild size="lg">
                 <Link to={"/"}>
                   <span>Home</span>

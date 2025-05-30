@@ -59,6 +59,10 @@ const router = createBrowserRouter([
         path: "about", // /contact
         element: <About />,
       },
+      {
+        path: "*",
+        element: <PageNotFound />,
+      },
     ],
   },
   {
@@ -82,10 +86,7 @@ const router = createBrowserRouter([
         element: <AddBlog />,
       },
     ],
-  },{
-    path:"*",
-    element: <PageNotFound/>
-  }
+  },
 ]);
 
 function App() {
