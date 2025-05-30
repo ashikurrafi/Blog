@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ManageUser from "./pages/ManageUser";
+import OTP from "./pages/OTP";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
       {
         path: "*",
         element: <PageNotFound />,
+      },
+      {
+        path: "verifyOTP",
+        element: <OTP />,
       },
     ],
   },
