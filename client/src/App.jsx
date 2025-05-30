@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ManageUser from "./pages/ManageUser";
+import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 
@@ -81,7 +82,10 @@ const router = createBrowserRouter([
         element: <AddBlog />,
       },
     ],
-  },
+  },{
+    path:"*",
+    element: <PageNotFound/>
+  }
 ]);
 
 function App() {

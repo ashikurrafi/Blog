@@ -14,7 +14,8 @@ import { Textarea } from "@/components/ui/textarea";
 const Contact = () => {
   return (
     <>
-      <section className="py-5">
+      {/* <section className="py-5"> */}
+      <section className="flex py-20 w-full items-center justify-center p-6 md:p-10">
         <div className="mx-auto max-w-3xl px-8 lg:px-0">
           <h1 className="text-center text-4xl font-semibold lg:text-5xl">
             Contact Us

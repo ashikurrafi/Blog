@@ -3,10 +3,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const About = () => {
   return (
     <>
-      <section className="py-16 md:py-32">
+      {/* <section className="py-16 md:py-32"> */}
+      <section className="flex py-20 w-full items-center justify-center p-6 md:p-10">
         <div className="mx-auto max-w-5xl px-6">
           <div className="mx-auto max-w-2xl text-center">
             <blockquote>
+                <h1 className="text-balance text-3xl font-semibold md:text-4xl pb-5">
+              About me
+            </h1>
               <p className="text-lg font-medium sm:text-xl md:text-3xl">
                 I’m a Computer Science and Engineering graduate passionate about
                 creating innovative tech solutions. Currently diving into
