@@ -21,7 +21,7 @@ const About = () => {
               <div className="mt-12 flex items-center justify-center gap-6">
                 <Avatar className="size-12">
                   <AvatarImage
-                    src="https://tailus.io/images/reviews/shekinah.webp"
+                    src="https://github.com/shadcn.png"
                     alt="Ashikur Rafi"
                     height="400"
                     width="400"
