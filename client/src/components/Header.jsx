@@ -1,8 +1,8 @@
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Avatar, AvatarImage } from "../components/ui/avatar";
+import { Button } from "../components/ui/button";
 
 const menuItems = [
   { name: "Home", to: "/" },
@@ -74,12 +74,14 @@ const Header = () => {
                     </Button>
                   </div>
                 ) : (
-                  <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit lg:border-l lg:pl-6">
-                    <Avatar>
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                    </Avatar>
-                    <cite className=" pt-1 font-medium">Ashikur Rafi</cite>
-                  </div>
+                  <Link to={"/profile"}>
+                    <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit lg:border-l lg:pl-6">
+                      <Avatar>
+                        <AvatarImage src="https://github.com/shadcn.png" />
+                      </Avatar>
+                      <cite className=" pt-1 font-medium">Ashikur Rafi</cite>
+                    </div>
+                  </Link>
                 )}
               </div>
             </div>
