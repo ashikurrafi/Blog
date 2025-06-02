@@ -1,98 +1,58 @@
 import {
-  Gemini,
-  GooglePaLM,
-  MagicUI,
-  MediaWiki,
-  Replit,
-  VSCodium,
-} from "@/components/logos";
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "../components/ui/button";
-import { Card } from "../components/ui/card";
 
-export default function IntegrationsSection() {
-  const integrations = [
-    {
-      title: "Google Gemini",
-      description:
-        "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
-      icon: <Gemini />,
-      link: "https://github.com/meschacirung/cnblocks",
-    },
-    {
-      title: "Replit",
-      description:
-        "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
-      icon: <Replit />,
-      link: "https://github.com/meschacirung/cnblocks",
-    },
-    {
-      title: "Magic UI",
-      description:
-        "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
-      icon: <MagicUI />,
-      link: "https://github.com/meschacirung/cnblocks",
-    },
-    {
-      title: "VSCodium",
-      description:
-        "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
-      icon: <VSCodium />,
-      link: "https://github.com/meschacirung/cnblocks",
-    },
-    {
-      title: "MediaWiki",
-      description:
-        "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
-      icon: <MediaWiki />,
-      link: "https://github.com/meschacirung/cnblocks",
-    },
-    {
-      title: "Google PaLM",
-      description:
-        "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
-      icon: <GooglePaLM />,
-      link: "https://github.com/meschacirung/cnblocks",
-    },
-  ];
+const AllBlogs = () => {
+  const [blogs, setBlogs] = useState([]);
+  console.log(blogs);
+  const getBlog = async () => {
+    try {
+      const response = await axios.get(`/api/v1/demo/blog/getAllBlogs`, {
+        withCredentials: true,
+      });
+
+      const blogs = response?.data?.data?.Allblogs;
+      setBlogs(blogs || []);
+    } catch (error) {
+      toast.error("Can't fetch data");
+      console.error("Blog fetching error:", error);
+    }
+  };
+
+  useEffect(() => {
+    getBlog();
+  }, []);
 
   return (
-    <section>
-      <div className="flex py-20 w-full items-center justify-center p-6 md:p-10">
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="text-center">
-            <h2 className="text-balance text-3xl font-semibold md:text-4xl">
-              All Blogs
-            </h2>
-            <p className="text-muted-foreground mt-6">Trending now a days</p>
-          </div>
+    <>
+      {blogs &&
+        blogs.map((blog, index) => (
+          <Card className="w-90 m-2" key={index}>
+            <img
+              className="mx-auto object-top rounded-2xl w-80 object-cover transform hover:scale-110 transition duration-900"
+              src="painting-mountain-lake-with-mountain-background.jpg"
+              alt={blog.title}
+            />
 
-          <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {integrations.map((integration, index) => (
-              <Card className="p-6" key={index}>
-                <div className="relative">
-                  <div className="*:size-10">{integration.icon}</div>
-
-                  <div className="space-y-2 py-6">
-                    <h3 className="text-base font-medium">
-                      {integration.title}
-                    </h3>
-                    <p className="text-muted-foreground line-clamp-2 text-sm">
-                      {integration.description}
-                    </p>
-                  </div>
-
-                  <div className="flex gap-3 border-t border-dashed pt-6">
-                    <Button asChild>
-                      <Link href={integration.link}>Read more</Link>
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
+            <CardHeader>
+              <CardTitle>{blog.title}</CardTitle>
+              <CardDescription>{blog.content}</CardDescription>
+              <Button asChild>
+                <Link to={`/blogs/${blog._id}`}>Read more</Link>
+              </Button>
+            </CardHeader>
+          </Card>
+        ))}
+    </>
   );
-}
+};
+
+export default AllBlogs;
