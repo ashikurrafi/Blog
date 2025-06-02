@@ -8,6 +8,7 @@ import About from "./pages/About";
 import AddBlog from "./pages/AddBlog";
 import AdminDashboard from "./pages/AdminDashboard";
 import AllBlogs from "./pages/AllBlogs";
+import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "verifyOTP",
         element: <OTP />,
+      },
+      {
+        path: "blog",
+        element: <Blog />,
       },
     ],
   },

@@ -6,7 +6,6 @@ import {
   Replit,
   VSCodium,
 } from "@/components/logos";
-import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
@@ -65,9 +64,7 @@ export default function IntegrationsSection() {
             <h2 className="text-balance text-3xl font-semibold md:text-4xl">
               All Blogs
             </h2>
-            <p className="text-muted-foreground mt-6">
-              Trending now a days
-            </p>
+            <p className="text-muted-foreground mt-6">Trending now a days</p>
           </div>
 
           <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -86,16 +83,8 @@ export default function IntegrationsSection() {
                   </div>
 
                   <div className="flex gap-3 border-t border-dashed pt-6">
-                    <Button
-                      asChild
-                      variant="secondary"
-                      size="sm"
-                      className="gap-1 pr-2 shadow-none"
-                    >
-                      <Link href={integration.link}>
-                        Learn More
-                        <ChevronRight className="ml-0 !size-3.5 opacity-50" />
-                      </Link>
+                    <Button asChild>
+                      <Link href={integration.link}>Read more</Link>
                     </Button>
                   </div>
                 </div>
