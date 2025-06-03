@@ -1,21 +1,37 @@
-import { useId } from "react";
-
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 
-const data = {
-  id: 1,
-  title: "Nature is beautiful",
-  content:
-    "There is something profoundly calming and inspiring about nature. Whether it’s the gentle rustle of leaves in the breeze, the rhythmic crashing of ocean waves, or the vibrant hues of a sunset painting the sky — nature constantly reminds us of the beauty and balance in the world.🌳 A Source of Peace and Clarity In the fast-paced rush of modern life, nature offers a sanctuary. A walk through a quiet forest or time spent beside a river can help clear the mind and soothe the soul. Studies have even shown that spending time in nature reduces stress, improves mental health, and boosts creativity.🌄 Diversity Beyond Imagination From snow-capped mountains to tropical rainforests, from the tiniest insects to the largest mammals, nature is a grand exhibition of life in all its forms. Each ecosystem, species, and landscape plays a vital role in the delicate web of life. The variety is endless, and every moment spent observing it teaches us something new.🌎 A Reminder of What We Must Protect The beauty of nature is not just in how it looks but in what it gives us — clean air, fresh water, fertile soil, and a livable climate. It’s a gift we must cherish and protect. As stewards of this planet, we have a responsibility to preserve its wonders for generations to come.🌼 Final Thoughts Nature’s beauty is a quiet but powerful force. It speaks to us in colors, sounds, and sensations — reminding us of our place in the world and urging us to slow down and appreciate life’s simple pleasures. Let’s not take it for granted.",
-  image: "painting-mountain-lake-with-mountain-background.jpg",
-};
-
 const Blog = () => {
-  const blog = data;
-  const id = useId();
+  const { id } = useParams();
+  const [blog, setBlog] = useState(null);
+  console.log(blog);
+  const imgPath = import.meta.env.VITE_SERVER_URL;
+
+  const singleBlog = async () => {
+    try {
+      const response = await axios.get(`/api/v1/demo/blog/getBlogById/${id}`, {
+        withCredentials: true,
+      });
+
+      const data = response.data?.data?.Blog;
+      setBlog(data);
+    } catch (error) {
+      toast.error("Can't fetch data");
+      console.error("Blog fetching error:", error);
+    }
+  };
+
+  useEffect(() => {
+    singleBlog();
+  }, []);
+
+  if (!blog) return <p className="text-center py-10">Loading blog...</p>;
 
   return (
     <>
@@ -26,7 +42,7 @@ const Blog = () => {
               <h1 className="text-center text-4xl font-semibold lg:text-5xl pb-5">
                 {blog.title}
               </h1>
-              <img src={blog.image} alt={blog.title} />
+              <img src={`${imgPath}/images/${blog.image}`} alt={blog.title} />
               {/* <p className="pt-5 text-lg font-medium sm:text-xl md:text-3xl text-justify"> */}
               <p className="pt-5 text-lg text-justify">{blog.content}</p>
 
@@ -54,12 +70,35 @@ const Blog = () => {
           </div>
           <div className="pt-5">
             <div className="*:not-first:mt-2">
-              <Label htmlFor={id}>Comment</Label>
-              <Textarea id={id} placeholder="Leave a comment" />
+              <Label>Comment</Label>
+              <Textarea placeholder="Leave a comment" />
               <div className="flex justify-end">
                 <Button variant="outline">Send</Button>
               </div>
             </div>
+          </div>
+
+          {/* Comments Section */}
+          <div className="mt-10">
+            <h2 className="text-2xl font-semibold mb-4">Comments</h2>
+            {blog.comments?.length > 0 ? (
+              <ul className="space-y-4">
+                {blog.comments.map((comment) => (
+                  <li
+                    key={comment._id}
+                    className="p-4 border rounded-md shadow-sm"
+                  >
+                    <p className="text-gray-800">{comment.comments}</p>
+                    <div className="text-sm text-gray-500 mt-2">
+                      By {comment.userId?.name || "Anonymous"} on{" "}
+                      {new Date(comment.createdAt).toLocaleDateString("en-GB")}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No comments yet.</p>
+            )}
           </div>
         </div>
       </div>
