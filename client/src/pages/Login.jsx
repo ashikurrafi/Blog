@@ -1,4 +1,7 @@
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "../components/ui/button";
 import {
   Card,
@@ -11,6 +14,34 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 
 const Login = () => {
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`/api/v1/demo/auth/loginUser`, data);
+      const result = response.data;
+      navigate("/");
+      console.log("Submitting", result);
+      toast.success("Login successful");
+    } catch (error) {
+      toast.error("Can't login");
+      console.error("Login error:", error);
+    }
+  };
+
   return (
     <>
       {/* <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10"> */}
@@ -25,14 +56,17 @@ const Login = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form>
+                <form onSubmit={handleSubmit}>
                   <div className="flex flex-col gap-6">
                     <div className="grid gap-2">
                       <Label htmlFor="email">Email</Label>
                       <Input
                         id="email"
+                        name="email"
                         type="email"
                         placeholder="email@email.com"
+                        value={data.email}
+                        onChange={handleChange}
                         required
                       />
                     </div>
@@ -46,7 +80,14 @@ const Login = () => {
                           Forgot your password?
                         </Link>
                       </div>
-                      <Input id="password" type="password" required />
+                      <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        value={data.password}
+                        onChange={handleChange}
+                        required
+                      />
                     </div>
                     <Button type="submit" className="w-full">
                       Login
