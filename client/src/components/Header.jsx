@@ -1,5 +1,6 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarImage } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
@@ -14,7 +15,9 @@ const menuItems = [
 const Header = () => {
   const [menuState, setMenuState] = useState(false);
 
-  const [isLogin, setIsLogin] = useState(false);
+  // Access user object directly from the Redux state
+  const user = useSelector((state) => state.auth.user);
+  console.log(user); // This will help debug the user object
 
   return (
     <>
@@ -36,7 +39,7 @@ const Header = () => {
 
                 <button
                   onClick={() => setMenuState(!menuState)}
-                  aria-label={menuState == true ? "Close Menu" : "Open Menu"}
+                  aria-label={menuState === true ? "Close Menu" : "Open Menu"}
                   className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden"
                 >
                   <Menu className="in-data-[state=active]:rotate-180 in-data-[state=active]:scale-0 in-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
@@ -60,7 +63,7 @@ const Header = () => {
                   </ul>
                 </div>
 
-                {!isLogin ? (
+                {!user?.user || Object.keys(user).length === 0 ? (
                   <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit lg:border-l lg:pl-6">
                     <Button asChild variant="outline" size="sm">
                       <Link to={"/login"}>
@@ -77,9 +80,11 @@ const Header = () => {
                   <Link to={"/profile"}>
                     <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit lg:border-l lg:pl-6">
                       <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarImage
+                          src={user?.user?.image || "https://github.com/shadcn.png"}
+                        />
                       </Avatar>
-                      <cite className=" pt-1 font-medium">Ashikur Rafi</cite>
+                      <cite className="pt-1 font-medium">{user?.user?.name || "User"}</cite>
                     </div>
                   </Link>
                 )}

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "../components/ui/button";
@@ -12,6 +13,7 @@ import {
 } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { setUser } from "../redux/AuthSlice";
 
 const Login = () => {
   const [data, setData] = useState({
@@ -20,6 +22,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const dispatch=useDispatch()
 
   const handleChange = (e) => {
     setData({
@@ -36,6 +39,7 @@ const Login = () => {
       navigate("/");
       console.log("Submitting", result);
       toast.success("Login successful");
+      dispatch(setUser(result.data))
     } catch (error) {
       toast.error("Can't login");
       console.error("Login error:", error);
