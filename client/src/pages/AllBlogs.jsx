@@ -1,14 +1,21 @@
 import { Card } from "@/components/ui/card";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "../components/ui/button";
 
 const AllBlogs = () => {
   const [blogs, setBlogs] = useState([]);
   const imgPath = import.meta.env.VITE_SERVER_URL;
-  const getBlog = async () => {
+
+  const navigate = useNavigate();
+
+  const handleNavigate = (id) => {
+    navigate(`/blog/${id}`);
+  };
+
+  const getAllBlog = async () => {
     try {
       const response = await axios.get(`/api/v1/demo/blog/getAllBlogs`, {
         withCredentials: true,
@@ -23,7 +30,7 @@ const AllBlogs = () => {
   };
 
   useEffect(() => {
-    getBlog();
+    getAllBlog();
   }, []);
 
   return (
@@ -57,9 +64,9 @@ const AllBlogs = () => {
                   </div>
 
                   <div className="flex gap-3 border-t border-dashed pt-6">
-                    <Link to={`/blogs/${blogs._id}`}>
-                      <Button>Read More</Button>
-                    </Link>
+                    <Button onClick={() => handleNavigate(blogs._id)}>
+                      Read More
+                    </Button>
                   </div>
                 </div>
               </Card>

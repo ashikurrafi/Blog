@@ -70,7 +70,7 @@ const router = createBrowserRouter([
         element: <OTP />,
       },
       {
-        path: "blog",
+        path: "blog/:id",
         element: <Blog />,
       },
     ],
