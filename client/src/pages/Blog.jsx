@@ -73,7 +73,7 @@ const Blog = () => {
               <Label>Comment</Label>
               <Textarea placeholder="Leave a comment" />
               <div className="flex justify-end">
-                <Button variant="outline">Send</Button>
+                <Button>Comment</Button>
               </div>
             </div>
           </div>
