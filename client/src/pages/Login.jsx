@@ -13,7 +13,7 @@ import {
 } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { setUser } from "../redux/AuthSlice";
+import { setUser } from "../redux/authSlice";
 
 const Login = () => {
   const [data, setData] = useState({
