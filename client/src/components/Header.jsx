@@ -1,9 +1,24 @@
-import { Menu, X } from "lucide-react";
+import axios from "axios";
+import { ChartColumnBig, LogOut, Menu, User, X } from "lucide-react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { FaRegEdit } from "react-icons/fa";
+import { LiaCommentSolid } from "react-icons/lia";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { Avatar, AvatarImage } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
+import { setUser } from "../redux/authSlice";
 
 const menuItems = [
   { name: "Home", to: "/" },
@@ -14,7 +29,25 @@ const menuItems = [
 
 const Header = () => {
   const [menuState, setMenuState] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const logoutHandler = async (eve) => {
+    try {
+      const response = await axios.post(`/api/v1/demo/auth/logoutUser`, {
+        withCredentials: true,
+      });
+      console.log(response);
+      if (response.data.success) {
+        navigate("/");
+        dispatch(setUser(null));
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error);
+      console.log(error);
+    }
+  };
   // Access user object directly from the Redux state
   const user = useSelector((state) => state.auth.user);
   console.log(user); // This will help debug the user object
@@ -77,16 +110,52 @@ const Header = () => {
                     </Button>
                   </div>
                 ) : (
-                  <Link to={"/profile"}>
-                    <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit lg:border-l lg:pl-6">
-                      <Avatar>
-                        <AvatarImage
-                          src={user?.user?.image || "https://github.com/shadcn.png"}
-                        />
-                      </Avatar>
-                      <cite className="pt-1 font-medium">{user?.user?.name || "User"}</cite>
-                    </div>
-                  </Link>
+                  <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit lg:border-l lg:pl-6">
+                    <DropdownMenu className="">
+                      <DropdownMenuTrigger asChild>
+                        <Avatar>
+                          <AvatarImage
+                            src={
+                              user?.user?.image ||
+                              "https://github.com/shadcn.png"
+                            }
+                          />
+                        </Avatar>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56 dark:bg-gray-800">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>
+                            <User />
+                            <span>Profile</span>
+                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <ChartColumnBig />
+                            <span>Your Blog</span>
+                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <LiaCommentSolid />
+                            <span>Comments</span>
+                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <FaRegEdit />
+                            <span>Write Blog</span>
+                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={logoutHandler}>
+                          <LogOut />
+                          <span>Log out</span>
+                          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 )}
               </div>
             </div>
