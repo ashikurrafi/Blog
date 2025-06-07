@@ -1,6 +1,7 @@
 import axios from "axios";
+import { Loader2 } from 'lucide-react';
 import { useState } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "../components/ui/button";
@@ -13,16 +14,18 @@ import {
 } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { setUser } from "../redux/authSlice";
+import { setLoading, setUser } from "../redux/authSlice";
 
 const Login = () => {
+  const { loading } = useSelector((store) => store.auth);
+
   const [data, setData] = useState({
     email: "",
     password: "",
   });
 
   const navigate = useNavigate();
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setData({
@@ -34,15 +37,18 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const response = await axios.post(`/api/v1/demo/auth/loginUser`, data);
       const result = response.data;
       navigate("/");
       console.log("Submitting", result);
       toast.success("Login successful");
-      dispatch(setUser(result.data))
+      dispatch(setUser(result.data));
     } catch (error) {
       toast.error("Can't login");
       console.error("Login error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -94,7 +100,14 @@ const Login = () => {
                       />
                     </div>
                     <Button type="submit" className="w-full">
-                      Login
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                          Please wait
+                        </>
+                      ) : (
+                        "Login"
+                      )}
                     </Button>
                   </div>
                   <div className="mt-4 text-center text-sm">
