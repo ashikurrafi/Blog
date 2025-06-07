@@ -1,6 +1,7 @@
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "../components/ui/button";
@@ -13,9 +14,11 @@ import {
 } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { setUser } from "../redux/authSlice";
+import { setLoading, setUser } from "../redux/authSlice";
 
 const Register = () => {
+  const { loading } = useSelector((store) => store.auth);
+
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -36,6 +39,8 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      dispatch(setLoading(true));
+
       const response = await axios.post(`/api/v1/demo/auth/registerUser`, data);
       const result = response.data;
       navigate("/");
@@ -45,6 +50,8 @@ const Register = () => {
     } catch (error) {
       toast.error(error.response.data.message);
       console.error("Login error:", error);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -114,7 +121,14 @@ const Register = () => {
                       />
                     </div>
                     <Button type="submit" className="w-full">
-                      Register
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                          Please wait
+                        </>
+                      ) : (
+                        "Register"
+                      )}{" "}
                     </Button>
                   </div>
                   <div className="mt-4 text-center text-sm">
