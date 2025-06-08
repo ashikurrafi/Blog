@@ -22,7 +22,7 @@ import { setUser } from "../redux/authSlice";
 
 const menuItems = [
   { name: "Home", to: "/" },
-  { name: "Blogs", to: "/allblogs" },
+  { name: "Blogs", to: "/blogs" },
   { name: "Contact", to: "/contact" },
   { name: "About", to: "/about" },
 ];

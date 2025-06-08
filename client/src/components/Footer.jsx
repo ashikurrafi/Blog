@@ -7,7 +7,7 @@ const links = [
   },
   {
     title: "Blogs",
-    to: "/allblogs",
+    to: "/blogs",
   },
   {
     title: "Contact",
