@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
 
 const AllBlogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -34,8 +35,16 @@ const AllBlogs = () => {
   }, []);
 
   return (
-    <section className="py-20">
+    <section className="py-[60px] md:py-10">
       <div className="mx-auto max-w-6xl px-6">
+        <div className="flex justify-center items-center w-full px-4">
+          <Input
+            type="text"
+            placeholder="Search here ..."
+            className="w-full max-w-md mb-5 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <Button className="ml-2 mb-5">Search</Button>
+        </div>
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-semibold">
             Explore Our Blog

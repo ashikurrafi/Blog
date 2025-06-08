@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -37,7 +37,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      dispatch(setLoading(true));
       const response = await axios.post(`/api/v1/demo/auth/loginUser`, data);
       const result = response.data;
       navigate("/");
@@ -48,7 +48,7 @@ const Login = () => {
       toast.error("Can't login");
       console.error("Login error:", error);
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
 

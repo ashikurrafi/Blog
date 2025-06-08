@@ -61,7 +61,7 @@ const Blog = () => {
                 <div className="space-y-1 border-l pl-6">
                   <cite className="font-medium">Ashikur Rafi</cite>
                   <span className="text-muted-foreground block text-sm">
-                    {/* CEO, Nvidia */}Blog Creation time :{" "}
+                    Blog Creation time :{" "}
                     {new Date().toLocaleDateString("en-GB")}
                   </span>
                 </div>
