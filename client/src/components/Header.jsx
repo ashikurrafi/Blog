@@ -32,7 +32,7 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const logoutHandler = async (eve) => {
+  const logoutHandler = async () => {
     try {
       const response = await axios.post(`/api/v1/demo/auth/logoutUser`, {
         withCredentials: true,
@@ -126,7 +126,11 @@ const Header = () => {
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate(`/dashboard/profile/${user?.user?._id}`)
+                            }
+                          >
                             <User />
                             <span>Profile</span>
                             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
