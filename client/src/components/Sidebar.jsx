@@ -55,7 +55,8 @@ const Sidebar = () => {
 
   return (
     <>
-      <aside className="h-screen">
+      {/* <aside className="h-screen"> */}
+      <aside>
         <nav className="h-full flex flex-col bg-white border-r shadow-sm">
           {/* Header */}
           <div className="p-4 pb-2 flex justify-between items-center">
