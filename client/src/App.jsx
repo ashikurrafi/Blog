@@ -6,13 +6,16 @@ import Header from "./components/Header";
 import About from "./pages/About";
 import AllBlogs from "./pages/AllBlogs";
 import Blog from "./pages/Blog";
+import Comments from "./pages/Comments";
 import Contact from "./pages/Contact";
+import CreateBlog from "./pages/CreateBlog";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
+import YourBlog from "./pages/YourBlog";
 
 const router = createBrowserRouter([
   {
@@ -94,14 +97,24 @@ const router = createBrowserRouter([
         <Footer />
       </>
     ),
-    children:[
+    children: [
       {
-        path:'profile/:id',
-        element:(
-          <Profile/>
-        )
-      }
-    ]
+        path: "profile/:id",
+        element: <Profile />,
+      },
+      {
+        path: "your-blog",
+        element: <YourBlog />,
+      },
+      {
+        path: "comments",
+        element: <Comments />,
+      },
+      {
+        path: "write-blog",
+        element: <CreateBlog />,
+      },
+    ],
   },
   {
     path: "*",

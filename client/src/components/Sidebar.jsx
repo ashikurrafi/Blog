@@ -78,7 +78,7 @@ const Sidebar = () => {
           <SidebarContext.Provider value={{ expanded }}>
             <ul className="flex-1 px-3 space-y-2 text-lg font-semibold">
               <NavLink
-                to="/dashboard/profile"
+                to={`/dashboard/profile/${user?.user?._id}`}
                 className={({ isActive }) =>
                   `flex items-center gap-3 p-3 rounded-md transition-all ${
                     isActive ? "bg-gray-200 text-gray-900" : "text-gray-700"
@@ -143,9 +143,9 @@ const Sidebar = () => {
               }`}
             >
               <div className="leading-4">
-                <h4 className="font-semibold">{user?.user?.name || "Guest"}</h4>
+                <h4 className="font-semibold">{user?.user?.name || "User"}</h4>
                 <span className="text-xs text-gray-600">
-                  {user?.user?.email || "guest@example.com"}
+                  {user?.user?.email || "user@user.com"}
                 </span>
               </div>
             </div>
