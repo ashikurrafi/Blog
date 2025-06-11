@@ -45,7 +45,8 @@ const Login = () => {
       toast.success("Login successful");
       dispatch(setUser(result.data));
     } catch (error) {
-      toast.error("Can't login");
+      const errorMessage = error.response?.data?.message || "Can't login";
+      toast.error(errorMessage);
       console.error("Login error:", error);
     } finally {
       dispatch(setLoading(false));

@@ -42,6 +42,8 @@ import { removeUser } from "../redux/authSlice";
 
 const Profile = () => {
   const user = useSelector((state) => state.auth.user);
+  const imgPath = import.meta.env.VITE_SERVER_URL;
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
@@ -52,11 +54,11 @@ const Profile = () => {
   const [confirmationText, setConfirmationText] = useState("");
   const [formData, setFormData] = useState({
     name: user?.user?.name || "",
-    email: user?.user?.email || "",
+    password: user?.user?.password || "",
     phone: user?.user?.phone || "",
     bio: user?.user?.bio || "",
     address: user?.user?.address || "",
-    website: user?.user?.website || "",
+    bloodGrp: user?.user?.bloodGrp || "",
     imageUser: null,
   });
 
@@ -98,7 +100,7 @@ const Profile = () => {
       });
 
       const response = await axios.patch(
-        "/api/v1/demo/user/update",
+        `/api/v1/demo/user/updateProfile`,
         formDataToSend,
         {
           headers: {
@@ -160,7 +162,7 @@ const Profile = () => {
       phone: user?.user?.phone || "",
       bio: user?.user?.bio || "",
       address: user?.user?.address || "",
-      website: user?.user?.website || "",
+      bloodGrp: user?.user?.bloodGrp || "",
       imageUser: null,
     });
     setImagePreview(null);
@@ -201,11 +203,13 @@ const Profile = () => {
               <div className="relative group">
                 <Avatar className="w-32 h-32 border-4 border-white shadow-xl">
                   <AvatarImage
-                    src={
-                      imagePreview ||
-                      user?.user?.image ||
-                      "https://github.com/shadcn.png"
-                    }
+                    // src={
+                    //   imagePreview ||
+                    //   user?.user?.image ||
+                    //   "https://github.com/shadcn.png"
+                    // }
+
+                    src={`${imgPath}/images/${user?.user?.image}`}
                     alt={user?.user?.name || "User"}
                     className="object-cover"
                   />
@@ -458,14 +462,14 @@ const Profile = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="website">Website</Label>
+                    <Label htmlFor="bloodGrp">Blood Group</Label>
                     <Input
-                      id="website"
-                      name="website"
+                      id="bloodGrp"
+                      name="bloodGrp"
                       type="url"
-                      value={formData.website}
+                      value={formData.bloodGrp}
                       onChange={handleInputChange}
-                      placeholder="https://your-website.com"
+                      placeholder="Blood Group"
                     />
                   </div>
                   <div className="space-y-2">
@@ -499,17 +503,17 @@ const Profile = () => {
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Website
+                        Blood group
                       </p>
                       <p className="font-medium">
-                        {user?.user?.website ? (
+                        {user?.user?.bloodGrp ? (
                           <a
-                            href={user.user.website}
+                            href={user.user.bloodGrp}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-600 hover:underline"
                           >
-                            {user.user.website}
+                            {user.user.bloodGrp}
                           </a>
                         ) : (
                           "Not specified"
