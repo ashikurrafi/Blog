@@ -45,12 +45,11 @@ import {
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
-import { removeUser } from "../redux/authSlice";
+import { removeUser, setUser } from "../redux/authSlice"; // Added setUser import
 
 const Profile = () => {
   const user = useSelector((state) => state.auth.user);
   const imgPath = import.meta.env.VITE_SERVER_URL;
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
@@ -59,7 +58,6 @@ const Profile = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [confirmationText, setConfirmationText] = useState("");
-
   const [formData, setFormData] = useState({
     name: user?.user?.name || "",
     password: "",
@@ -130,9 +128,24 @@ const Profile = () => {
 
       if (response.data.success) {
         toast.success("Profile updated successfully!");
+
+        // 🔥 CRITICAL FIX: Update Redux state with new user data
+        const updatedUserData = response.data.data.user;
+        dispatch(setUser({ user: updatedUserData }));
+
+        // Reset form state with new data
+        setFormData({
+          name: updatedUserData.name || "",
+          password: "",
+          phone: updatedUserData.phone || "",
+          bio: updatedUserData.bio || "",
+          address: updatedUserData.address || "",
+          bloodGrp: updatedUserData.bloodGrp || "",
+          imageUser: null,
+        });
+
         setIsEditing(false);
         setImagePreview(null);
-        // Optionally update Redux state here if needed
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to update profile");
@@ -172,6 +185,7 @@ const Profile = () => {
       setConfirmationText("");
     }
   };
+
   const resetForm = () => {
     setFormData({
       name: user?.user?.name || "",
@@ -195,6 +209,7 @@ const Profile = () => {
     });
   };
 
+  // Rest of your component JSX remains the same...
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-6">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -220,13 +235,11 @@ const Profile = () => {
               <div className="relative group">
                 <Avatar className="w-32 h-32 border-4 border-white shadow-xl">
                   <AvatarImage
-                    // src={
-                    //   imagePreview ||
-                    //   user?.user?.image ||
-                    //   "https://github.com/shadcn.png"
-                    // }
-
-                    src={`${imgPath}/images/${user?.user?.image}`}
+                    src={
+                      imagePreview ||
+                      `${imgPath}/images/${user?.user?.image}` ||
+                      "https://github.com/shadcn.png"
+                    }
                     alt={user?.user?.name || "User"}
                     className="object-cover"
                   />
@@ -529,25 +542,14 @@ const Profile = () => {
                   </div>
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
                     <div className="w-5 h-5 flex items-center justify-center">
-                      <div className="w-3 h-3 rounded-full bg-gray-500"></div>
+                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Blood group
+                        Blood Group
                       </p>
                       <p className="font-medium">
-                        {user?.user?.bloodGrp ? (
-                          <a
-                            href={user.user.bloodGrp}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline"
-                          >
-                            {user.user.bloodGrp}
-                          </a>
-                        ) : (
-                          "Not specified"
-                        )}
+                        {user?.user?.bloodGrp || "Not specified"}
                       </p>
                     </div>
                   </div>
