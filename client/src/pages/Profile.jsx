@@ -52,9 +52,10 @@ const Profile = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [confirmationText, setConfirmationText] = useState("");
+
   const [formData, setFormData] = useState({
     name: user?.user?.name || "",
-    password: user?.user?.password || "",
+    password: "",
     phone: user?.user?.phone || "",
     bio: user?.user?.bio || "",
     address: user?.user?.address || "",
@@ -93,7 +94,17 @@ const Profile = () => {
 
     try {
       const formDataToSend = new FormData();
-      Object.keys(formData).forEach((key) => {
+      const allowedFields = [
+        "name",
+        "phone",
+        "bio",
+        "address",
+        "bloodGrp",
+        "imageUser",
+        "password",
+      ];
+
+      allowedFields.forEach((key) => {
         if (formData[key] !== null && formData[key] !== "") {
           formDataToSend.append(key, formData[key]);
         }
@@ -114,7 +125,7 @@ const Profile = () => {
         toast.success("Profile updated successfully!");
         setIsEditing(false);
         setImagePreview(null);
-        // You might want to update Redux state here
+        // Optionally update Redux state here if needed
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to update profile");
@@ -154,11 +165,10 @@ const Profile = () => {
       setConfirmationText("");
     }
   };
-
   const resetForm = () => {
     setFormData({
       name: user?.user?.name || "",
-      email: user?.user?.email || "",
+      password: "",
       phone: user?.user?.phone || "",
       bio: user?.user?.bio || "",
       address: user?.user?.address || "",
@@ -378,14 +388,14 @@ const Profile = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
+                    <Label htmlFor="password">Password</Label>
                     <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
+                      id="password"
+                      name="password"
+                      type="password"
+                      value={formData.password}
                       onChange={handleInputChange}
-                      placeholder="Enter your email"
+                      placeholder="Enter new password"
                     />
                   </div>
                   <div className="space-y-2">
@@ -466,7 +476,7 @@ const Profile = () => {
                     <Input
                       id="bloodGrp"
                       name="bloodGrp"
-                      type="url"
+                      type="text"
                       value={formData.bloodGrp}
                       onChange={handleInputChange}
                       placeholder="Blood Group"
