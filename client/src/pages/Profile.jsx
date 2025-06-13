@@ -1,3 +1,10 @@
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import axios from "axios";
 import {
   AlertTriangle,
@@ -473,14 +480,28 @@ const Profile = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="bloodGrp">Blood Group</Label>
-                    <Input
-                      id="bloodGrp"
-                      name="bloodGrp"
+                    <Select
                       value={formData.bloodGrp}
-                      onChange={handleInputChange}
-                      placeholder="Enter your blood group"
-                    />
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({ ...prev, bloodGrp: value }))
+                      }
+                    >
+                      <SelectTrigger id="bloodGrp">
+                        <SelectValue placeholder="Select Blood Group" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="A+">A+</SelectItem>
+                        <SelectItem value="A-">A-</SelectItem>
+                        <SelectItem value="B+">B+</SelectItem>
+                        <SelectItem value="B-">B-</SelectItem>
+                        <SelectItem value="AB+">AB+</SelectItem>
+                        <SelectItem value="AB-">AB-</SelectItem>
+                        <SelectItem value="O+">O+</SelectItem>
+                        <SelectItem value="O-">O-</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="bio">Bio</Label>
                     <Textarea
