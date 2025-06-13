@@ -55,7 +55,7 @@ export const deleteUser = asyncHandler(async (req, res) => {
 
 export const updateUser = asyncHandler(async (req, res) => {
   const userId = req.user._id; // Fixed: use req.user._id instead of req.id
-  const { name, password, phone, bio, address } = req.body;
+  const { name, password, phone, bio, address, bloodGrp } = req.body;
   const file = req.file;
 
   const user = await userModel.findById(userId).select("-password");
@@ -69,6 +69,7 @@ export const updateUser = asyncHandler(async (req, res) => {
   if (phone) user.phone = phone;
   if (bio) user.bio = bio;
   if (address) user.address = address;
+  if (bloodGrp) user.bloodGrp = bloodGrp;
 
   // Handle password update separately if needed
   if (password) {

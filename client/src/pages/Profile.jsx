@@ -476,10 +476,9 @@ const Profile = () => {
                     <Input
                       id="bloodGrp"
                       name="bloodGrp"
-                      type="text"
                       value={formData.bloodGrp}
                       onChange={handleInputChange}
-                      placeholder="Blood Group"
+                      placeholder="Enter your blood group"
                     />
                   </div>
                   <div className="space-y-2">
