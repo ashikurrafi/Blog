@@ -49,7 +49,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   }
 
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: "1h",
+    expiresIn: "24h",
   });
 
   res
@@ -57,7 +57,7 @@ export const loginUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Use secure cookies in production
       sameSite: "Strict", // Prevent CSRF attacks
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
     })
     .json(
       new apiResponse(200, { user, token }, "User logged in successfully", true)

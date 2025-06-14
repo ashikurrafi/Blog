@@ -15,6 +15,12 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
   const user = await userModel.findById(decoded.userId);
 
   if (!user) {
+    // Clear the cookie if user doesn't exist
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+    });
     throw new apiError(401, "User not found");
   }
 
