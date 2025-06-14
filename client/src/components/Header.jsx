@@ -51,6 +51,7 @@ const Header = () => {
   // Access user object directly from the Redux state
   const user = useSelector((state) => state.auth.user);
   console.log(user); // This will help debug the user object
+  const imgPath = import.meta.env.VITE_SERVER_URL;
 
   return (
     <>
@@ -115,10 +116,8 @@ const Header = () => {
                       <DropdownMenuTrigger asChild>
                         <Avatar>
                           <AvatarImage
-                            src={
-                              user?.user?.image ||
-                              "https://github.com/shadcn.png"
-                            }
+                            src={`${imgPath}/images/${user?.user?.image}`}
+                            alt={user?.user?.name || "User"}
                           />
                         </Avatar>
                       </DropdownMenuTrigger>
@@ -135,17 +134,23 @@ const Header = () => {
                             <span>Profile</span>
                             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => navigate(`/dashboard/your-blog`)}
+                          >
                             <ChartColumnBig />
                             <span>Your Blog</span>
                             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => navigate(`/dashboard/comments`)}
+                          >
                             <LiaCommentSolid />
                             <span>Comments</span>
                             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => navigate(`/dashboard/write-blog`)}
+                          >
                             <FaRegEdit />
                             <span>Write Blog</span>
                             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
