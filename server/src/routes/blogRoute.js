@@ -4,6 +4,7 @@ import {
   deleteBlog,
   getAllBlogs,
   getBlogById,
+  getBlogsByAuthor,
   updateBlog,
 } from "../controllers/blogController.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
@@ -27,6 +28,7 @@ blogRouter.patch(
   updateBlog
 );
 blogRouter.get("/getBlogById/:id", getBlogById);
+blogRouter.get("/getBlogByAuthor/:id", getBlogsByAuthor);
 
 // Exporting the router so it can be used in other files
 export default blogRouter;

@@ -6,18 +6,21 @@ import asyncHandler from "../error/asyncHandler.js";
 import blogModel from "../models/blogModel.js";
 
 export const createBlog = asyncHandler(async (req, res) => {
-  const { title, content } = req.body;
+  const { title, content, category, isPublished } = req.body;
 
-  const imagePath = req.file.filename;
+  const imagePath = req.file?.filename;
 
-  if (!title || !content || !req.file) {
-    throw new apiError(400, "Title, content, and image are required");
+  if (!title || !content || !req.file || !category) {
+    throw new apiError(400, "Title, content, image, category are required");
   }
 
   const createdBlog = await blogModel.create({
     title,
     content,
     image: imagePath,
+    author: req.user._id,
+    category,
+    isPublished,
   });
 
   if (!createdBlog) {
@@ -71,7 +74,33 @@ export const deleteBlog = asyncHandler(async (req, res) => {
 });
 
 export const getAllBlogs = asyncHandler(async (req, res) => {
-  const blogs = await blogModel.find().sort({ createdAt: -1 });
+  const { category, isPublished, author, page = 1, limit = 10 } = req.query;
+
+  // Build filter object
+  const filter = {};
+
+  if (category) filter.category = category;
+  if (isPublished !== undefined) filter.isPublished = isPublished === "true";
+  if (author) filter.author = author;
+
+  // Calculate pagination
+  const skip = (page - 1) * limit;
+
+  const blogs = await blogModel
+    .find(filter)
+    .populate("author", "name email image")
+    .populate({
+      path: "comments",
+      populate: {
+        path: "userId",
+        select: "name email image",
+      },
+    })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(parseInt(limit));
+
+  const totalBlogs = await blogModel.countDocuments(filter);
 
   if (!blogs || blogs.length === 0) {
     throw new apiError(404, "No blogs found");
@@ -80,7 +109,16 @@ export const getAllBlogs = asyncHandler(async (req, res) => {
   res.json(
     new apiResponse(
       200,
-      { Allblogs: blogs },
+      {
+        Allblogs: blogs,
+        pagination: {
+          currentPage: parseInt(page),
+          totalPages: Math.ceil(totalBlogs / limit),
+          totalBlogs,
+          hasNextPage: page * limit < totalBlogs,
+          hasPrevPage: page > 1,
+        },
+      },
       "Blogs retrieved successfully",
       true
     )
@@ -88,8 +126,7 @@ export const getAllBlogs = asyncHandler(async (req, res) => {
 });
 
 export const updateBlog = asyncHandler(async (req, res) => {
-  const { title, content } = req.body;
-
+  const { title, content, category } = req.body;
   const blogId = req.params.id;
 
   const updatedBlog = await blogModel.findById(blogId);
@@ -104,6 +141,10 @@ export const updateBlog = asyncHandler(async (req, res) => {
 
   if (content) {
     updatedBlog.content = content;
+  }
+
+  if (category) {
+    updatedBlog.category = category;
   }
 
   if (req.file) {
@@ -153,5 +194,23 @@ export const getBlogById = asyncHandler(async (req, res) => {
 
   res.json(
     new apiResponse(200, { Blog: blog }, "Blog retrieved successfully", true)
+  );
+});
+
+export const getBlogsByAuthor = asyncHandler(async (req, res) => {
+  const authorId = req.params.id;
+  if (!authorId) {
+    throw new apiError(400, "Author ID is required");
+  }
+  const blogs = await blogModel
+    .find({ author: authorId })
+    .sort({ createdAt: -1 });
+
+  if (!blogs || blogs.length === 0) {
+    throw new apiError(404, "No blogs found for this author");
+  }
+
+  res.json(
+    new apiResponse(200, { Blogs: blogs }, "Blogs retrieved successfully", true)
   );
 });
