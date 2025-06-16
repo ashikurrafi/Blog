@@ -75,9 +75,7 @@ const CreateBlog = () => {
       );
 
       if (response.data.success) {
-        const fetchedCategories = response.data.data.Categories.map(
-          (cat) => cat.name
-        );
+        const fetchedCategories = response.data.data.Categories;
         setCategories(fetchedCategories);
       }
     } catch (error) {
@@ -249,6 +247,7 @@ const CreateBlog = () => {
                 <Label className="flex items-center gap-2">
                   <Tag className="w-4 h-4" /> Category
                 </Label>
+
                 <Select
                   value={formData.category}
                   onValueChange={handleCategoryChange}
@@ -258,8 +257,8 @@ const CreateBlog = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
+                      <SelectItem key={cat._id} value={cat._id}>
+                        {cat.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
