@@ -18,12 +18,7 @@ categoryRouter.post(
   createCategory
 );
 
-categoryRouter.get(
-  "/getAllCategories",
-  isAuthenticated,
-  isAdmin,
-  getAllCategories
-);
+categoryRouter.get("/getAllCategories", isAuthenticated, getAllCategories);
 
 categoryRouter.put(
   "/updateCategory/:id",
