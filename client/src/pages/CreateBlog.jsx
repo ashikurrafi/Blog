@@ -1,4 +1,5 @@
 import axios from "axios";
+import JoditEditor from "jodit-react";
 import {
   Calendar,
   Eye,
@@ -11,7 +12,7 @@ import {
   Upload,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -42,7 +43,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select";
-import { Textarea } from "../components/ui/textarea";
 
 const CreateBlog = () => {
   const user = useSelector((state) => state.auth.user);
@@ -196,13 +196,6 @@ const CreateBlog = () => {
     }
   };
 
-  const formatPreviewContent = (content) =>
-    content.split("\n").map((p, i) => (
-      <p key={i} className="mb-4">
-        {p}
-      </p>
-    ));
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-6">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -319,17 +312,21 @@ const CreateBlog = () => {
                 <Label htmlFor="content" className="flex items-center gap-2">
                   <FileText className="w-4 h-4" /> Content
                 </Label>
-                <Textarea
-                  id="content"
-                  name="content"
+                <JoditEditor
+                  ref={useRef(null)}
                   value={formData.content}
-                  onChange={handleInputChange}
-                  rows={12}
-                  placeholder="Write your blog content here..."
-                  required
+                  config={{
+                    readonly: false,
+                    height: 400,
+                    uploader: { insertImageAsBase64URI: true },
+                  }}
+                  tabIndex={1}
+                  onBlur={(newContent) =>
+                    setFormData((prev) => ({ ...prev, content: newContent }))
+                  }
                 />
                 <p className="text-sm text-gray-500">
-                  {formData.content.length} characters
+                  {formData.content?.length} characters
                 </p>
               </div>
 
@@ -438,15 +435,14 @@ const CreateBlog = () => {
                           </span>
                         </div>
                       </div>
-                      <div className="prose max-w-none">
-                        {formData.content ? (
-                          formatPreviewContent(formData.content)
-                        ) : (
-                          <p className="text-gray-500 italic">
-                            Your blog content will appear here...
-                          </p>
-                        )}
-                      </div>
+                      <div
+                        className="prose max-w-none"
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            formData.content ||
+                            "<p class='text-gray-500 italic'>Your blog content will appear here...</p>",
+                        }}
+                      />
                     </div>
                     <DialogFooter>
                       <DialogClose asChild>

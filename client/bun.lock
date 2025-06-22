@@ -12,10 +12,11 @@
         "@radix-ui/react-slot": "^1.2.3",
         "@reduxjs/toolkit": "^2.8.2",
         "@tailwindcss/vite": "^4.1.10",
-        "axios": "^1.9.0",
+        "axios": "^1.10.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "input-otp": "^1.4.2",
+        "jodit-react": "^5.2.19",
         "lucide-react": "^0.511.0",
         "next-themes": "^0.4.6",
         "react": "^19.1.0",
@@ -360,6 +361,8 @@
 
     "asynckit": ["asynckit@0.4.0", "", {}, "sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q=="],
 
+    "autobind-decorator": ["autobind-decorator@2.4.0", "", {}, "sha512-OGYhWUO72V6DafbF8PM8rm3EPbfuyMZcJhtm5/n26IDwO18pohE4eNazLoCGhPiXOCD0gEGmrbU3849QvM8bbw=="],
+
     "axios": ["axios@1.10.0", "", { "dependencies": { "follow-redirects": "^1.15.6", "form-data": "^4.0.0", "proxy-from-env": "^1.1.0" } }, "sha512-/1xYAC4MP/HEG+3duIhFr4ZQXR4sQXOIe+o6sdqzeykGLx6Upp/1p8MHqhINOvGeP7xyNHe7tsiJByc4SSVUxw=="],
 
     "balanced-match": ["balanced-match@1.0.2", "", {}, "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="],
@@ -513,6 +516,10 @@
     "isexe": ["isexe@2.0.0", "", {}, "sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw=="],
 
     "jiti": ["jiti@2.4.2", "", { "bin": { "jiti": "lib/jiti-cli.mjs" } }, "sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A=="],
+
+    "jodit": ["jodit@4.6.2", "", { "dependencies": { "autobind-decorator": "^2.4.0" } }, "sha512-euIYTOBzZO04jroi79RvhRiXVs3ANCSg5JC8HOT/gf81dIdduxUKvkM4lVSdVP28aZBxs0u+nIdLC7OGXh1jhg=="],
+
+    "jodit-react": ["jodit-react@5.2.19", "", { "dependencies": { "jodit": "^4.6.2" }, "peerDependencies": { "react": "~0.14 || ^15 || ^16 || ^17 || ^18 || ^19", "react-dom": "~0.14 || ^15 || ^16 || ^17 || ^18 || ^19" } }, "sha512-vOHbHijZ2A8JOhIyHxaAW//MVA2jDSJC9U3eHzsX494wt4NTqjfEJJzZOiin2afmgL9RbfiGeh+1dn0ZR72zkA=="],
 
     "js-tokens": ["js-tokens@4.0.0", "", {}, "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ=="],
 
