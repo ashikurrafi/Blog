@@ -31,11 +31,7 @@ import { setUser } from "../redux/authSlice";
 const SidebarContext = createContext();
 
 const Sidebar = () => {
-
-
-
   const imgPath = import.meta.env.VITE_SERVER_URL;
-
 
   const [expanded, setExpanded] = useState(true);
   const user = useSelector((state) => state.auth.user);
@@ -137,8 +133,11 @@ const Sidebar = () => {
           {/* Footer with user info and dropdown */}
           <div className="border-t flex items-center p-3">
             <img
-                         src={`${imgPath}/images/${user?.user?.image}`}
-
+              src={
+                user?.user?.image
+                  ? `${imgPath}/images/${user.user.image}`
+                  : `${imgPath}/defaultImage.png`
+              }
               alt={user?.user?.name || "User"}
               className="w-10 h-10 rounded-md object-cover"
             />

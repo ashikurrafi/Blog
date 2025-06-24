@@ -116,7 +116,11 @@ const Header = () => {
                       <DropdownMenuTrigger asChild>
                         <Avatar>
                           <AvatarImage
-                            src={`${imgPath}/images/${user?.user?.image}`}
+                            src={
+                              user?.user?.image
+                                ? `${imgPath}/images/${user.user.image}`
+                                : `${imgPath}/defaultImage.png`
+                            }
                             alt={user?.user?.name || "User"}
                           />
                         </Avatar>

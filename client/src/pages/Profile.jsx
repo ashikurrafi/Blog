@@ -236,9 +236,9 @@ const Profile = () => {
                 <Avatar className="w-32 h-32 border-4 border-white shadow-xl">
                   <AvatarImage
                     src={
-                      imagePreview ||
-                      `${imgPath}/images/${user?.user?.image}` ||
-                      "https://github.com/shadcn.png"
+                      user?.user?.image
+                        ? `${imgPath}/images/${user.user.image}`
+                        : `${imgPath}/defaultImage.png`
                     }
                     alt={user?.user?.name || "User"}
                     className="object-cover"
