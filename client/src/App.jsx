@@ -114,10 +114,11 @@ const router = createBrowserRouter([
       {
         path: "write-blog",
         element: <CreateBlog />,
-      },{
-        path:"update-blog",
-        element:<UpdateBlog/>
-      }
+      },
+      {
+        path: "update-blog/:blogId",
+        element: <UpdateBlog />,
+      },
     ],
   },
   {
