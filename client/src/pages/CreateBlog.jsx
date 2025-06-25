@@ -54,6 +54,7 @@ const CreateBlog = () => {
     content: "",
     category: "",
     isPublished: false,
+    isSpecial: false,
     imageBlog: null,
   });
 
@@ -75,8 +76,7 @@ const CreateBlog = () => {
       );
 
       if (response.data.success) {
-        const fetchedCategories = response.data.data.Categories;
-        setCategories(fetchedCategories);
+        setCategories(response.data.data.Categories);
       }
     } catch (error) {
       toast.error("Failed to load categories");
@@ -124,7 +124,8 @@ const CreateBlog = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { title, content, category, isPublished, imageBlog } = formData;
+    const { title, content, category, isPublished, isSpecial, imageBlog } =
+      formData;
 
     if (!title.trim()) return toast.error("Title is required");
     if (!content.trim()) return toast.error("Content is required");
@@ -140,6 +141,7 @@ const CreateBlog = () => {
       formDataToSend.append("content", content.trim());
       formDataToSend.append("category", category);
       formDataToSend.append("isPublished", isPublished);
+      formDataToSend.append("isSpecial", isSpecial);
       if (imageBlog) formDataToSend.append("imageBlog", imageBlog);
 
       const response = await axios.post(
@@ -166,6 +168,7 @@ const CreateBlog = () => {
           content: "",
           category: "",
           isPublished: false,
+          isSpecial: false,
           imageBlog: null,
         });
         setImagePreview(null);
@@ -180,7 +183,11 @@ const CreateBlog = () => {
   };
 
   const handleSaveDraft = () => {
-    const draftData = { ...formData, isPublished: false };
+    const draftData = {
+      ...formData,
+      isPublished: false,
+      isSpecial: false, // reset to false when saving as draft
+    };
     localStorage.setItem("blogDraft", JSON.stringify(draftData));
     toast.success("Draft saved locally");
   };
@@ -330,7 +337,7 @@ const CreateBlog = () => {
                 </p>
               </div>
 
-              {/* Publish Toggle */}
+              {/* Toggles */}
               <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
@@ -342,7 +349,6 @@ const CreateBlog = () => {
                       isPublished: e.target.checked,
                     }))
                   }
-                  className="rounded border-gray-300 text-blue-600"
                 />
                 <Label
                   htmlFor="isPublished"
@@ -353,7 +359,25 @@ const CreateBlog = () => {
                   ) : (
                     <EyeOff className="w-4 h-4 text-gray-400" />
                   )}
-                  Publish immediately
+                  Publish blog
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="isSpecial"
+                  checked={formData.isSpecial}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      isSpecial: e.target.checked,
+                    }))
+                  }
+                />
+                <Label htmlFor="isSpecial" className="flex items-center gap-2">
+                  <Tag className="w-4 h-4" />
+                  Mark as Special Blog
                 </Label>
               </div>
 
