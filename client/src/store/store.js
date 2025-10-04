@@ -1,15 +1,17 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import {
-    FLUSH,
-    PAUSE,
-    PERSIST,
-    persistReducer,
-    PURGE,
-    REGISTER,
-    REHYDRATE,
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistReducer,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authSlice from "./authSlice";
+import blogSlice from "./blogSlice";
+import commentSlice from "./commentSlice";
 
 const persistConfig = {
   key: "root",
@@ -19,6 +21,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: authSlice,
+  blog: blogSlice,
+  comment: commentSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
