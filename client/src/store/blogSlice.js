@@ -14,9 +14,12 @@ const blogSlice = createSlice({
     setYourBlogs: (state, action) => {
       state.yourBlogs = action.payload;
     },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
   },
 });
 
-export const { setBlog, setYourBlogs } = blogSlice.actions;
+export const { setBlog, setYourBlogs, setError } = blogSlice.actions;
 
 export default blogSlice.reducer;
