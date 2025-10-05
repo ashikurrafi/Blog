@@ -10,7 +10,7 @@ import BlogView from "./pages/BlogView";
 import Comments from "./pages/Comments";
 import CreateBlog from "./pages/CreateBlog";
 import Dashboard from "./pages/Dashboard";
-import Homepage from "./pages/Homepage";
+import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import NotFoundPage from "./pages/NotFoundPage";
 import Profile from "./pages/Profile";
@@ -25,7 +25,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Navbar />
-        <Homepage />
+        <HomePage />
         <Footer />
       </>
     ),
