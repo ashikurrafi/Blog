@@ -8,7 +8,7 @@ class apiResponse {
    * @param {string} message - A success message (default is "Success").
    */
 
-  constructor(statusCode, data, message = "Success") {
+  constructor(statusCode, data, message = 'Success') {
     this.statusCode = statusCode; // HTTP status code
     this.data = data; // Data to be included in the response body
     this.message = message; // Success message

@@ -1,5 +1,5 @@
-import bcrypt from "bcryptjs";
-import mongoose from "mongoose";
+import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema(
   {
@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     },
     bio: {
       type: String,
-      default: "",
+      default: '',
     },
     email: {
       type: String,
@@ -27,24 +27,24 @@ const userSchema = new mongoose.Schema(
     },
     photoUrl: {
       type: String,
-      default: "",
+      default: '',
     },
     role: {
       type: String,
-      enum: ["user", "admin"],
-      default: "user",
+      enum: ['user', 'admin', 'superuser'],
+      default: 'user',
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 userSchema.index({ nextTaskAvailableAt: 1 });
 
 // Hash password before saving
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
     return next();
   }
 
@@ -62,6 +62,6 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-const userModel = mongoose.model("User", userSchema);
+const userModel = mongoose.model('User', userSchema);
 
 export default userModel;

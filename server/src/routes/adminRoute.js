@@ -1,4 +1,4 @@
-import express from "express"; // Importing express to create the API router
+import express from 'express'; // Importing express to create the API router
 
 import {
   createAdminToUser,
@@ -9,50 +9,50 @@ import {
   getAllAdmins,
   updateAdmin,
   updateUserByAdmin,
-} from "../controllers/adminController.js"; // Importing controller functions for handling requests
+} from '../controllers/adminController.js'; // Importing controller functions for handling requests
 
-import authenticate from "../middleware/authMiddleware.js";
-import isAdmin from "../middleware/isAdminMiddleware.js";
+import authenticate from '../middleware/authMiddleware.js';
+import isAdmin from '../middleware/isAdminMiddleware.js';
 
-import { singleUpload } from "../middleware/multer.js";
+import { singleUpload } from '../middleware/multer.js';
 
 const adminRouter = express.Router(); // Creating an instance of the router
 
 // Defining a GET route at the root of the /api/v1/demo path
 adminRouter.patch(
-  "/createUserToAdmin/:userId",
+  '/createUserToAdmin/:userId',
   authenticate,
   isAdmin,
-  createUserToAdmin
+  createUserToAdmin,
 );
 adminRouter.patch(
-  "/createAdminToUser/:adminId",
+  '/createAdminToUser/:adminId',
   authenticate,
   isAdmin,
-  createAdminToUser
+  createAdminToUser,
 );
 adminRouter.delete(
-  "/deleteUserByAdmin/:userId",
+  '/deleteUserByAdmin/:userId',
   authenticate,
   isAdmin,
-  deleteUserByAdmin
+  deleteUserByAdmin,
 );
 adminRouter.patch(
-  "/updateUserByAdmin/:userId",
+  '/updateUserByAdmin/:userId',
   authenticate,
   isAdmin,
   singleUpload,
-  updateUserByAdmin
+  updateUserByAdmin,
 );
-adminRouter.get("/getAllAdmins", authenticate, isAdmin, getAllAdmins);
-adminRouter.get("/getAdminById/:id", authenticate, isAdmin, getAdminById);
-adminRouter.delete("/deleteAdmin/:adminId", authenticate, isAdmin, deleteAdmin);
+adminRouter.get('/getAllAdmins', authenticate, isAdmin, getAllAdmins);
+adminRouter.get('/getAdminById/:id', authenticate, isAdmin, getAdminById);
+adminRouter.delete('/deleteAdmin/:adminId', authenticate, isAdmin, deleteAdmin);
 adminRouter.patch(
-  "/updateAdmin/:adminId",
+  '/updateAdmin/:adminId',
   authenticate,
   isAdmin,
   singleUpload,
-  updateAdmin
+  updateAdmin,
 );
 // Exporting the router so it can be used in other files
 export default adminRouter;

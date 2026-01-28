@@ -1,13 +1,13 @@
-import jwt from "jsonwebtoken";
-import apiError from "../errors/apiError.js";
-import asyncHandler from "../errors/asyncHandler.js";
-import userModel from "../models/userModel.js";
+import jwt from 'jsonwebtoken';
+import apiError from '../errors/apiError.js';
+import asyncHandler from '../errors/asyncHandler.js';
+import userModel from '../models/userModel.js';
 
 const authenticate = asyncHandler(async (req, res, next) => {
-  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+  const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
 
   if (!token) {
-    throw new apiError(401, "No token, authorization denied");
+    throw new apiError(401, 'No token, authorization denied');
   }
 
   try {
@@ -15,16 +15,16 @@ const authenticate = asyncHandler(async (req, res, next) => {
 
     const user = await userModel
       .findById(decoded.userId)
-      .select("_id name email role");
+      .select('_id name email role');
 
     if (!user) {
       // Clear the cookie if user doesn't exist
-      res.clearCookie("token", {
+      res.clearCookie('token', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       });
-      throw new apiError(401, "User not found");
+      throw new apiError(401, 'User not found');
     }
 
     req.user = user;
@@ -33,7 +33,7 @@ const authenticate = asyncHandler(async (req, res, next) => {
 
     next();
   } catch (error) {
-    throw new apiError(401, "Token is not valid");
+    throw new apiError(401, 'Token is not valid');
   }
 });
 

@@ -12,9 +12,9 @@ class apiError extends Error {
 
   constructor(
     statusCode,
-    errorMessage = "Something went wrong",
+    errorMessage = 'Something went wrong',
     errors = [],
-    stack = ""
+    stack = '',
   ) {
     // Call the parent Error constructor with the error message
     super(errorMessage);

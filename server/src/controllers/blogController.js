@@ -1,20 +1,20 @@
-import apiError from "../errors/apiError.js";
-import apiResponse from "../errors/apiResponse.js";
-import asyncHandler from "../errors/asyncHandler.js";
-import blogModel from "../models/blogModel.js";
-import cloudinary from "../utils/cloudinary.js";
-import getDataUri from "../utils/dataUri.js";
+import apiError from '../errors/apiError.js';
+import apiResponse from '../errors/apiResponse.js';
+import asyncHandler from '../errors/asyncHandler.js';
+import blogModel from '../models/blogModel.js';
+import cloudinary from '../utils/cloudinary.js';
+import getDataUri from '../utils/dataUri.js';
 
 export const createBlog = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
   const user = req.user;
 
   if (!title || !description) {
-    throw new apiError(400, "Title and description are required");
+    throw new apiError(400, 'Title and description are required');
   }
 
   const file = req.file;
-  let imageUrl = "";
+  let imageUrl = '';
 
   if (file) {
     const fileUri = getDataUri(file);
@@ -32,8 +32,8 @@ export const createBlog = asyncHandler(async (req, res) => {
   const response = new apiResponse(
     200,
     blog,
-    "Blog created successfully",
-    true
+    'Blog created successfully',
+    true,
   );
 
   res.status(response.statusCode).json(response);
@@ -46,7 +46,7 @@ export const updateBlog = asyncHandler(async (req, res) => {
   const blog = await blogModel.findById(id);
 
   if (!blog) {
-    throw new apiError(404, "Blog not found");
+    throw new apiError(404, 'Blog not found');
   }
 
   const file = req.file;
@@ -70,8 +70,8 @@ export const updateBlog = asyncHandler(async (req, res) => {
   const response = new apiResponse(
     200,
     blog,
-    "Blog updated successfully",
-    true
+    'Blog updated successfully',
+    true,
   );
 
   res.status(response.statusCode).json(response);
@@ -83,7 +83,7 @@ export const deleteBlog = asyncHandler(async (req, res) => {
   const blog = await blogModel.findById(id);
 
   if (!blog) {
-    throw new apiError(404, "Blog not found");
+    throw new apiError(404, 'Blog not found');
   }
 
   await blogModel.findByIdAndDelete(id);
@@ -91,8 +91,8 @@ export const deleteBlog = asyncHandler(async (req, res) => {
   const response = new apiResponse(
     200,
     null,
-    "Blog deleted successfully",
-    true
+    'Blog deleted successfully',
+    true,
   );
 
   res.status(response.statusCode).json(response);
@@ -104,14 +104,14 @@ export const getBlogById = asyncHandler(async (req, res) => {
   const blog = await blogModel.findById(id);
 
   if (!blog) {
-    throw new apiError(404, "Blog not found");
+    throw new apiError(404, 'Blog not found');
   }
 
   const response = new apiResponse(
     200,
     blog,
-    "Blog fetched successfully",
-    true
+    'Blog fetched successfully',
+    true,
   );
 
   res.status(response.statusCode).json(response);
@@ -123,8 +123,8 @@ export const getAllBlogs = asyncHandler(async (req, res) => {
   const response = new apiResponse(
     200,
     blogs,
-    "Blogs fetched successfully",
-    true
+    'Blogs fetched successfully',
+    true,
   );
 
   res.status(response.statusCode).json(response);
@@ -133,13 +133,15 @@ export const getAllBlogs = asyncHandler(async (req, res) => {
 export const getBlogByUser = asyncHandler(async (req, res) => {
   const { userId } = req.params;
 
-  const blogs = await blogModel.find({ author: userId }).sort({ createdAt: -1 });
+  const blogs = await blogModel
+    .find({ author: userId })
+    .sort({ createdAt: -1 });
 
   const response = new apiResponse(
     200,
     blogs,
-    "Blogs fetched successfully",
-    true
+    'Blogs fetched successfully',
+    true,
   );
   res.status(response.statusCode).json(response);
 });

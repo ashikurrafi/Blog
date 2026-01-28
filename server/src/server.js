@@ -1,6 +1,6 @@
 // Importing required modules
-import app from "./app.js";
-import connectDataBase from "./config/db.js";
+import app from './app.js';
+import connectDataBase from './config/db.js';
 
 const PORT = process.env.SERVER_PORT || 4000;
 

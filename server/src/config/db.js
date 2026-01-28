@@ -1,13 +1,13 @@
-import mongoose from "mongoose"; // Importing mongoose to interact with MongoDB
+import mongoose from 'mongoose'; // Importing mongoose to interact with MongoDB
 
 // Function to connect to the MongoDB database
 const connectDataBase = async () => {
   try {
     // Connecting to MongoDB using connection string from environment variables
     const connectionInstance = await mongoose.connect(
-      `${process.env.MONGODB_URL}/${process.env.DATABASE_NAME}`
+      `${process.env.MONGODB_URL}/${process.env.DATABASE_NAME}`,
     );
-    console.log("✅ Connected to MongoDB successfully!"); // Log success message
+    console.log('✅ Connected to MongoDB successfully!'); // Log success message
     console.log(`✅ Database host: ${connectionInstance.connection.host}`); // Log the host of the database
   } catch (error) {
     // If there's an error, log it and exit the process
