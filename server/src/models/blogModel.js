@@ -6,6 +6,10 @@ const blogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isSuper: {
+      type: Boolean,
+      default: false,
+    },
     description: {
       type: String,
       required: true,
