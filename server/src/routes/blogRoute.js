@@ -1,5 +1,4 @@
-import express from 'express'; // Importing express to create the API router
-
+import express from 'express';
 import {
   createBlog,
   deleteBlog,
@@ -10,18 +9,15 @@ import {
 } from '../controllers/blogController.js';
 
 import authenticate from '../middleware/authMiddleware.js';
-
 import { singleUpload } from '../middleware/multer.js';
 
-const blogRouter = express.Router(); // Creating an instance of the router
+const blogRouter = express.Router();
 
-// Defining a GET route at the root of the /api/v1/demo path
 blogRouter.post('/createBlog', authenticate, singleUpload, createBlog);
 blogRouter.patch('/updateBlog/:id', authenticate, singleUpload, updateBlog);
 blogRouter.delete('/deleteBlog/:id', authenticate, deleteBlog);
 blogRouter.get('/getBlog/:id', authenticate, getBlogById);
-blogRouter.get('/getAllBlogs', getAllBlogs);
-blogRouter.get('/getBlogByUser/:userId', getBlogByUser);
+blogRouter.get('/getAllBlogs', authenticate, getAllBlogs);
+blogRouter.get('/getBlogByUser/:userId', authenticate, getBlogByUser);
 
-// Exporting the router so it can be used in other files
 export default blogRouter;

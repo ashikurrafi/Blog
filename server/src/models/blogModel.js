@@ -32,6 +32,8 @@ const blogSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+blogSchema.index({ isSuper: 1, createdAt: -1 });
+
 const Blog = mongoose.model('Blog', blogSchema);
 
 export default Blog;
