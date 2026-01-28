@@ -26,6 +26,45 @@ export const createUserToAdmin = asyncHandler(async (req, res) => {
   res.status(response.statusCode).json(response);
 });
 
+export const createUserToSuperUser = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await userModel.findById(userId).select('+password');
+
+  if (!user) {
+    throw new apiError(404, 'User not found');
+  }
+
+  user.role = 'superuser';
+  await user.save();
+
+  const response = new apiResponse(
+    200,
+    'User promoted to superuser successfully',
+    true,
+  );
+  res.status(response.statusCode).json(response);
+});
+
+export const createAdminToSuperUser = asyncHandler(async (req, res) => {
+  const { adminId } = req.params;
+
+  const admin = await userModel.findById(adminId).select('+password');
+
+  if (!admin) {
+    throw new apiError(404, 'Admin not found');
+  }
+  admin.role = 'superuser';
+  await admin.save();
+
+  const response = new apiResponse(
+    200,
+    'Admin demoted to superuser successfully',
+    true,
+  );
+  res.status(response.statusCode).json(response);
+});
+
 export const createAdminToUser = asyncHandler(async (req, res) => {
   const { adminId } = req.params;
 
