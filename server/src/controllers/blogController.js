@@ -100,11 +100,16 @@ export const deleteBlog = asyncHandler(async (req, res) => {
 
 export const getBlogById = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const role = req.user.role;
 
   const blog = await blogModel.findById(id);
 
   if (!blog) {
     throw new apiError(404, 'Blog not found');
+  }
+
+  if (blog.isSuper && role === 'user') {
+    throw new apiError(403, 'You are not allowed to view this blog');
   }
 
   const response = new apiResponse(
