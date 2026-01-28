@@ -91,7 +91,7 @@ export const deleteUser = asyncHandler(async (req, res) => {
 
   const response = new apiResponse(
     200,
-    null,
+    { user, blogs },
     'User and the blogs deleted successfully',
     true,
   );
