@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setUser } from "../redux/authSlice";
+import apiClient from "../api/apiClient";
+import { setLoading, setToken, setUser } from "../redux/authSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -16,21 +17,13 @@ const Login = () => {
     dispatch(setLoading(true));
 
     try {
-      const res = await fetch("/api/v1/demo/auth/loginUser", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const { data } = await apiClient.post("/auth/loginUser", {
+        email,
+        password,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Login failed");
-      }
-
-      // Save user in Redux
-      dispatch(setUser(data.data));
-      alert("Login successful!");
+      dispatch(setUser(data.data.user));
+      dispatch(setToken(data.data.token));
       setEmail("");
       setPassword("");
     } catch (err) {
@@ -41,42 +34,33 @@ const Login = () => {
   };
 
   return (
-    <>
-      <div>
-        <h2>Login</h2>
-        <form onSubmit={handleLogin}>
-          <div>
-            <label>Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div>
-            <label>Password:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <button type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
-
-          {error && (
-            <div>
-              <p>{error}</p>
-            </div>
-          )}
-        </form>
-      </div>
-    </>
+    <div>
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+      </form>
+    </div>
   );
 };
 

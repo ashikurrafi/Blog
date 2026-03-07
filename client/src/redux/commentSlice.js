@@ -18,5 +18,6 @@ const commentSlice = createSlice({
     },
   },
 });
-export const { setLoading, setComment } = commentSlice.actions;
+
+export const { setLoading, setComments, addComment } = commentSlice.actions;
 export default commentSlice.reducer;
