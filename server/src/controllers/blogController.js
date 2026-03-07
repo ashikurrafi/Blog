@@ -2,7 +2,8 @@ import apiError from '../errors/apiError.js';
 import apiResponse from '../errors/apiResponse.js';
 import asyncHandler from '../errors/asyncHandler.js';
 import blogModel from '../models/blogModel.js';
-import cloudinary from '../utils/cloudinary.js';
+import { cascadeDeleteBlog } from '../utils/cascadeDelete.js';
+import cloudinary, { deleteFromCloudinary } from '../utils/cloudinary.js';
 import getDataUri from '../utils/dataUri.js';
 
 export const createBlog = asyncHandler(async (req, res) => {
@@ -13,7 +14,6 @@ export const createBlog = asyncHandler(async (req, res) => {
     throw new apiError(400, 'Title and description are required');
   }
 
-  // normal users cannot create super blogs
   if (isSuper === true && user.role === 'user') {
     throw new apiError(403, 'You are not allowed to create super blogs');
   }
@@ -33,9 +33,14 @@ export const createBlog = asyncHandler(async (req, res) => {
     author: user._id,
   });
 
-  res
-    .status(201)
-    .json(new apiResponse(201, blog, 'Blog created successfully', true));
+  const response = new apiResponse(
+    201,
+    blog,
+    'Blog created successfully',
+    true,
+  );
+
+  res.status(response.statusCode).json(response);
 });
 
 export const getAllBlogs = asyncHandler(async (req, res) => {
@@ -46,21 +51,32 @@ export const getAllBlogs = asyncHandler(async (req, res) => {
     filter.isSuper = false;
   }
 
+  const authorSelect =
+    role === 'user' ? 'name role photoUrl' : 'name superName role photoUrl';
+
   const blogs = await blogModel
     .find(filter)
-    .populate('author', 'name role')
+    .populate('author', authorSelect)
     .sort({ createdAt: -1 });
 
-  res
-    .status(200)
-    .json(new apiResponse(200, blogs, 'Blogs fetched successfully', true));
+  const response = new apiResponse(
+    200,
+    blogs,
+    'Blogs fetched successfully',
+    true,
+  );
+
+  res.status(response.statusCode).json(response);
 });
 
 export const getBlogById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const role = req.user.role;
 
-  const blog = await blogModel.findById(id);
+  const authorSelect =
+    role === 'user' ? 'name role photoUrl' : 'name superName role photoUrl';
+
+  const blog = await blogModel.findById(id).populate('author', authorSelect);
 
   if (!blog) {
     throw new apiError(404, 'Blog not found');
@@ -70,9 +86,14 @@ export const getBlogById = asyncHandler(async (req, res) => {
     throw new apiError(403, 'You are not allowed to view this blog');
   }
 
-  res
-    .status(200)
-    .json(new apiResponse(200, blog, 'Blog fetched successfully', true));
+  const response = new apiResponse(
+    200,
+    blog,
+    'Blog fetched successfully',
+    true,
+  );
+
+  res.status(response.statusCode).json(response);
 });
 
 export const updateBlog = asyncHandler(async (req, res) => {
@@ -86,7 +107,10 @@ export const updateBlog = asyncHandler(async (req, res) => {
     throw new apiError(404, 'Blog not found');
   }
 
-  // normal users cannot change isSuper
+  if (user.role !== 'admin' && blog.author.toString() !== user._id.toString()) {
+    throw new apiError(403, 'You are not allowed to update this blog');
+  }
+
   if (typeof isSuper === 'boolean' && user.role === 'user') {
     throw new apiError(403, 'You are not allowed to change blog visibility');
   }
@@ -95,7 +119,11 @@ export const updateBlog = asyncHandler(async (req, res) => {
   if (description) blog.description = description;
   if (typeof isSuper === 'boolean') blog.isSuper = isSuper;
 
+  // If new image uploaded → delete old one from Cloudinary first
   if (req.file) {
+    if (blog.imageUrl) {
+      await deleteFromCloudinary(blog.imageUrl);
+    }
     const fileUri = getDataUri(req.file);
     const upload = await cloudinary.uploader.upload(fileUri);
     blog.imageUrl = upload.secure_url;
@@ -103,9 +131,14 @@ export const updateBlog = asyncHandler(async (req, res) => {
 
   await blog.save();
 
-  res
-    .status(200)
-    .json(new apiResponse(200, blog, 'Blog updated successfully', true));
+  const response = new apiResponse(
+    200,
+    blog,
+    'Blog updated successfully',
+    true,
+  );
+
+  res.status(response.statusCode).json(response);
 });
 
 export const deleteBlog = asyncHandler(async (req, res) => {
@@ -118,16 +151,21 @@ export const deleteBlog = asyncHandler(async (req, res) => {
     throw new apiError(404, 'Blog not found');
   }
 
-  // only admin or author can delete
   if (user.role !== 'admin' && blog.author.toString() !== user._id.toString()) {
     throw new apiError(403, 'You are not allowed to delete this blog');
   }
 
-  await blog.deleteOne();
+  // Cascade: image from Cloudinary + all comments + blog document
+  await cascadeDeleteBlog(blog);
 
-  res
-    .status(200)
-    .json(new apiResponse(200, null, 'Blog deleted successfully', true));
+  const response = new apiResponse(
+    200,
+    null,
+    'Blog deleted successfully',
+    true,
+  );
+
+  res.status(response.statusCode).json(response);
 });
 
 export const getBlogByUser = asyncHandler(async (req, res) => {
@@ -135,14 +173,24 @@ export const getBlogByUser = asyncHandler(async (req, res) => {
   const role = req.user.role;
 
   let filter = { author: userId };
-
   if (role === 'user') {
     filter.isSuper = false;
   }
 
-  const blogs = await blogModel.find(filter).sort({ createdAt: -1 });
+  const authorSelect =
+    role === 'user' ? 'name role photoUrl' : 'name superName role photoUrl';
 
-  res
-    .status(200)
-    .json(new apiResponse(200, blogs, 'Blogs fetched successfully', true));
+  const blogs = await blogModel
+    .find(filter)
+    .populate('author', authorSelect)
+    .sort({ createdAt: -1 });
+
+  const response = new apiResponse(
+    200,
+    blogs,
+    'Blogs fetched successfully',
+    true,
+  );
+
+  res.status(response.statusCode).json(response);
 });
