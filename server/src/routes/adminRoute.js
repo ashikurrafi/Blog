@@ -1,24 +1,25 @@
-import express from 'express'; // Importing express to create the API router
+import express from 'express';
 
 import {
+  createAdminToSuperUser,
   createAdminToUser,
   createUserToAdmin,
+  createUserToSuperUser,
   deleteAdmin,
   deleteUserByAdmin,
   getAdminById,
   getAllAdmins,
   updateAdmin,
   updateUserByAdmin,
-} from '../controllers/adminController.js'; // Importing controller functions for handling requests
+} from '../controllers/adminController.js';
 
 import authenticate from '../middleware/authMiddleware.js';
 import isAdmin from '../middleware/isAdminMiddleware.js';
-
 import { singleUpload } from '../middleware/multer.js';
 
-const adminRouter = express.Router(); // Creating an instance of the router
+const adminRouter = express.Router();
 
-// Defining a GET route at the root of the /api/v1/demo path
+// role management
 adminRouter.patch(
   '/createUserToAdmin/:userId',
   authenticate,
@@ -26,11 +27,25 @@ adminRouter.patch(
   createUserToAdmin,
 );
 adminRouter.patch(
+  '/createUserToSuperUser/:userId',
+  authenticate,
+  isAdmin,
+  createUserToSuperUser,
+);
+adminRouter.patch(
   '/createAdminToUser/:adminId',
   authenticate,
   isAdmin,
   createAdminToUser,
 );
+adminRouter.patch(
+  '/createAdminToSuperUser/:adminId',
+  authenticate,
+  isAdmin,
+  createAdminToSuperUser,
+);
+
+// user management by admin
 adminRouter.delete(
   '/deleteUserByAdmin/:userId',
   authenticate,
@@ -44,6 +59,8 @@ adminRouter.patch(
   singleUpload,
   updateUserByAdmin,
 );
+
+// admin CRUD
 adminRouter.get('/getAllAdmins', authenticate, isAdmin, getAllAdmins);
 adminRouter.get('/getAdminById/:id', authenticate, isAdmin, getAdminById);
 adminRouter.delete('/deleteAdmin/:adminId', authenticate, isAdmin, deleteAdmin);
@@ -54,5 +71,5 @@ adminRouter.patch(
   singleUpload,
   updateAdmin,
 );
-// Exporting the router so it can be used in other files
+
 export default adminRouter;

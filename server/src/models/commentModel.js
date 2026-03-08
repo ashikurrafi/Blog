@@ -6,6 +6,10 @@ const commentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isSuper: {
+      type: Boolean,
+      default: false,
+    },
     postId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Blog',
@@ -22,6 +26,8 @@ const commentSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+commentSchema.index({ postId: 1, isSuper: 1, createdAt: -1 });
 
 const Comment = mongoose.model('Comment', commentSchema);
 
