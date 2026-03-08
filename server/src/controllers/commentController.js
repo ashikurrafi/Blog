@@ -7,12 +7,15 @@ import commentModel from '../models/commentModel.js';
 export const createComment = asyncHandler(async (req, res) => {
   const { postId } = req.params;
   const commenterUserId = req.id;
-  const { content } = req.body;
+  const { content, isSuper = false } = req.body;
 
   if (!content) {
-    return res
-      .status(400)
-      .json({ message: 'Comment content is required', success: false });
+    throw new apiError(400, 'Comment content is required');
+  }
+
+  // only superusers and admins can create super comments
+  if (isSuper && req.user.role === 'user') {
+    throw new apiError(403, 'You are not allowed to create super comments');
   }
 
   const blog = await blogModel.findById(postId);
@@ -20,15 +23,24 @@ export const createComment = asyncHandler(async (req, res) => {
     throw new apiError(404, 'Blog post not found');
   }
 
+  // normal users cannot comment on super blogs
+  if (blog.isSuper && req.user.role === 'user') {
+    throw new apiError(403, 'You are not allowed to comment on this blog');
+  }
+
   const comment = await commentModel.create({
     content,
+    isSuper,
     userId: commenterUserId,
     postId,
   });
 
+  const populateSelect =
+    req.user.role === 'user' ? 'name photoUrl' : 'name superName photoUrl';
+
   await comment.populate({
     path: 'userId',
-    select: 'name photoUrl',
+    select: populateSelect,
   });
 
   blog.comments.push(comment._id);
@@ -40,6 +52,7 @@ export const createComment = asyncHandler(async (req, res) => {
     'Comment created successfully',
     true,
   );
+
   res.status(response.statusCode).json(response);
 });
 
@@ -48,23 +61,18 @@ export const updateComment = asyncHandler(async (req, res) => {
   const { content } = req.body;
   const { commentId } = req.params;
 
-  console.log('comment ID', commentId);
-  console.log('user ID', userId);
-  console.log('content', content);
-
   const comment = await commentModel.findById(commentId);
 
   if (!comment) {
     throw new apiError(404, 'Comment not found');
   }
 
-  console.log(comment);
-
   if (comment.userId.toString() !== userId.toString()) {
     throw new apiError(403, 'You are not allowed to update this comment');
   }
+
   comment.content = content;
-  comment.editedAt = new Date(); // Optional: Add this field to schema
+  comment.editedAt = new Date();
 
   await comment.save();
 
@@ -74,12 +82,15 @@ export const updateComment = asyncHandler(async (req, res) => {
     'Comment updated successfully',
     true,
   );
+
   res.status(response.statusCode).json(response);
 });
 
 export const deleteComment = asyncHandler(async (req, res) => {
+  aaaa;
   const { commentId } = req.params;
   const userId = req.id;
+  const role = req.user.role;
 
   const comment = await commentModel.findById(commentId);
 
@@ -87,11 +98,11 @@ export const deleteComment = asyncHandler(async (req, res) => {
     throw new apiError(404, 'Comment not found');
   }
 
-  if (comment.userId.toString() !== userId.toString()) {
+  // owner or admin can delete
+  if (comment.userId.toString() !== userId.toString() && role !== 'admin') {
     throw new apiError(403, 'You are not allowed to delete this comment');
   }
 
-  // Remove comment from blog.comments
   await blogModel.findByIdAndUpdate(comment.postId, {
     $pull: { comments: commentId },
   });
@@ -110,58 +121,83 @@ export const deleteComment = asyncHandler(async (req, res) => {
 
 export const getBlogComments = asyncHandler(async (req, res) => {
   const { postId } = req.params;
-  const comments = await commentModel
-    .find({ postId })
-    .populate({ path: 'userId', select: 'firstName lastName photoUrl' })
-    .sort({ createdAt: -1 });
+  const role = req.user.role;
 
-  if (!comments || comments.length === 0) {
-    throw new apiError(404, 'No comments found');
+  let filter = { postId };
+
+  // normal users can't see super comments
+  if (role === 'user') {
+    filter.isSuper = false;
   }
+
+  const populateSelect =
+    role === 'user' ? 'name photoUrl' : 'name superName photoUrl';
+
+  const comments = await commentModel
+    .find(filter)
+    .populate({ path: 'userId', select: populateSelect })
+    .sort({ createdAt: -1 });
 
   const response = new apiResponse(
     200,
     comments,
-    'Comments fetched successfully',
+    comments.length ? 'Comments fetched successfully' : 'No comments found',
     true,
   );
+
   res.status(response.statusCode).json(response);
 });
 
 export const getAllComment = asyncHandler(async (req, res) => {
-  const comments = await commentModel
-    .find()
-    .populate({ path: 'userId', select: 'name photoUrl' })
-    .sort({ createdAt: -1 });
+  const role = req.user.role;
 
-  if (!comments || comments.length === 0) {
-    throw new apiError(404, 'No comments found');
+  let filter = {};
+  if (role === 'user') {
+    filter.isSuper = false;
   }
+
+  const populateSelect =
+    role === 'user' ? 'name photoUrl' : 'name superName photoUrl';
+
+  const comments = await commentModel
+    .find(filter)
+    .populate({ path: 'userId', select: populateSelect })
+    .sort({ createdAt: -1 });
 
   const response = new apiResponse(
     200,
     comments,
-    'All Comments fetched successfully',
+    'All comments fetched successfully',
     true,
   );
+
   res.status(response.statusCode).json(response);
 });
 
 export const getAllCommentsOnMyBlogs = asyncHandler(async (req, res) => {
   const authorId = req.id;
+  const role = req.user.role;
 
   const blogs = await blogModel.find({ author: authorId }).select('_id');
-
   const blogIds = blogs.map((blog) => blog._id);
 
   if (blogIds.length === 0) {
-    const response = new apiResponse(200, [], 'No comments found', true);
-    return res.status(response.statusCode).json(response);
+    return res
+      .status(200)
+      .json(new apiResponse(200, [], 'No comments found', true));
   }
 
+  let filter = { postId: { $in: blogIds } };
+  if (role === 'user') {
+    filter.isSuper = false;
+  }
+
+  const populateSelect =
+    role === 'user' ? 'name photoUrl' : 'name superName photoUrl';
+
   const comments = await commentModel
-    .find({ postId: { $in: blogIds } })
-    .populate('userId', 'firstName lastName photoUrl')
+    .find(filter)
+    .populate('userId', populateSelect)
     .sort({ createdAt: -1 });
 
   const response = new apiResponse(
