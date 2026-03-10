@@ -1,9 +1,9 @@
 import axios from 'axios';
+import { setToken, setUser } from '../redux/authSlice';
 import store from '../redux/store';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:4000/api/v1/demo',
-  // baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000/api/v1/demo',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1/demo',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -27,13 +27,18 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// ──── Response interceptor: normalize errors ────
+// ──── Response interceptor: handle errors and auth ────
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message =
-      error.response?.data?.message || error.message || 'Something went wrong';
-    return Promise.reject(new Error(message));
+    // Handle 401 Unauthorized - clear auth state
+    if (error.response?.status === 401) {
+      store.dispatch(setToken(null));
+      store.dispatch(setUser(null));
+    }
+
+    // Return error with response attached for proper handling
+    return Promise.reject(error);
   },
 );
 
