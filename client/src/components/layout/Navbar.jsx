@@ -67,7 +67,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Left: Logo and Mobile Menu */}
         <div className="flex items-center gap-2">
@@ -84,7 +84,7 @@ const Navbar = () => {
             </Sheet>
           )}
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold">BlogApp</span>
+            <span className="text-xl font-bold">MyBlogApp</span>
           </Link>
         </div>
 
@@ -205,7 +205,7 @@ const MobileSidebar = () => {
   return (
     <div className="flex flex-col h-full py-4">
       <div className="px-4 mb-4">
-        <h2 className="text-lg font-semibold">BlogApp</h2>
+        <h2 className="text-lg font-semibold">MyBlogApp</h2>
       </div>
       <nav className="flex-1 px-2">
         {navItems.map((item) => (

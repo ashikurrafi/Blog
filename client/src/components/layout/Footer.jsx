@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
-            <h3 className="text-lg font-bold mb-2">BlogApp</h3>
+            <h3 className="text-lg font-bold mb-2">MyBlogApp</h3>
             <p className="text-muted-foreground text-sm">
               A modern blogging platform built with MERN stack. Share your
               thoughts, stories, and ideas with the world.
@@ -80,7 +80,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t mt-8 pt-6 text-center text-sm text-muted-foreground">
-          <p>&copy; {currentYear} BlogApp. All rights reserved.</p>
+          <p>&copy; {currentYear} MyBlogApp. All rights reserved.</p>
         </div>
       </div>
     </footer>

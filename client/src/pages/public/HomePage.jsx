@@ -135,7 +135,7 @@ const HomePage = () => {
       {/* Hero Section */}
       <section className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          Welcome to BlogApp
+          Welcome to MyBlogApp
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Discover stories, thinking, and expertise from writers on any topic.
