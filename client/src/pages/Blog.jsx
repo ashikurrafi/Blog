@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 import apiClient from "../api/apiClient";
 import { setBlog } from "../redux/blogSlice";
 import { setComments } from "../redux/commentSlice";
@@ -37,6 +38,7 @@ const Blog = () => {
       dispatch(setBlog(data.data));
     } catch (err) {
       console.error("Failed to fetch blogs:", err.message);
+      toast.error("Failed to load blogs. Please try again later.");
     }
   };
 

@@ -29,6 +29,7 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const SinglePostPage = () => {
   const { slug } = useParams();
@@ -68,6 +69,7 @@ const SinglePostPage = () => {
       setComments(response.data.data || []);
     } catch (err) {
       console.error("Failed to fetch comments:", err);
+      toast.error("Failed to load comments. Please try again.");
     }
   };
 
@@ -87,6 +89,7 @@ const SinglePostPage = () => {
       setComment("");
     } catch (err) {
       console.error("Failed to submit comment:", err);
+      toast.error("Failed to submit comment. Please try again.");
     } finally {
       setSubmittingComment(false);
     }
@@ -99,6 +102,7 @@ const SinglePostPage = () => {
       navigate("/");
     } catch (err) {
       console.error("Failed to delete post:", err);
+      toast.error("Failed to delete post. Please try again.");
     } finally {
       setDeleting(false);
     }
@@ -110,6 +114,7 @@ const SinglePostPage = () => {
       setComments(comments.filter((c) => c._id !== commentId));
     } catch (err) {
       console.error("Failed to delete comment:", err);
+      toast.error("Failed to delete comment. Please try again.");
     }
   };
 

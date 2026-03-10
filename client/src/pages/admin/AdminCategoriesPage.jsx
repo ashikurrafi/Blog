@@ -48,6 +48,7 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const AdminCategoriesPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -78,6 +79,7 @@ const AdminCategoriesPage = () => {
       setCategories(response.data.data);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
+      toast.error("Failed to load categories. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -142,6 +144,7 @@ const AdminCategoriesPage = () => {
       setCategories(categories.filter((c) => c._id !== categoryToDelete._id));
     } catch (error) {
       console.error("Failed to delete category:", error);
+      toast.error("Failed to delete category. Please try again later.");
     } finally {
       setDeleting(false);
       setDeleteDialogOpen(false);

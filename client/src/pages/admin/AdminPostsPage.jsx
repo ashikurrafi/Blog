@@ -47,6 +47,7 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const AdminPostsPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -87,6 +88,7 @@ const AdminPostsPage = () => {
       setPagination(paginationData);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
+      toast.error("Failed to load posts. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -101,6 +103,7 @@ const AdminPostsPage = () => {
       setPagination((prev) => ({ ...prev, total: prev.total - 1 }));
     } catch (error) {
       console.error("Failed to delete post:", error);
+      toast.error("Failed to delete post. Please try again later.");
     } finally {
       setDeleting(false);
       setDeleteDialogOpen(false);

@@ -47,6 +47,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const MyPostsPage = () => {
   const [posts, setPosts] = useState([]);
@@ -84,6 +85,7 @@ const MyPostsPage = () => {
       setPagination(paginationData);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
+      toast.error("Failed to load posts. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -98,6 +100,7 @@ const MyPostsPage = () => {
       setPagination((prev) => ({ ...prev, total: prev.total - 1 }));
     } catch (error) {
       console.error("Failed to delete post:", error);
+      toast.error("Failed to delete post. Please try again.");
     } finally {
       setDeleting(false);
       setDeleteDialogOpen(false);

@@ -41,6 +41,7 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const AdminUsersPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -68,6 +69,7 @@ const AdminUsersPage = () => {
       setUsers(response.data.data);
     } catch (error) {
       console.error("Failed to fetch users:", error);
+      toast.error("Failed to load users. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -83,6 +85,7 @@ const AdminUsersPage = () => {
       );
     } catch (error) {
       console.error("Failed to update role:", error);
+      toast.error("Failed to update user role. Please try again.");
     } finally {
       setUpdatingRole(null);
     }
@@ -96,6 +99,7 @@ const AdminUsersPage = () => {
       setUsers(users.filter((u) => u._id !== userToDelete._id));
     } catch (error) {
       console.error("Failed to delete user:", error);
+      toast.error("Failed to delete user. Please try again later.");
     } finally {
       setDeleting(false);
       setDeleteDialogOpen(false);

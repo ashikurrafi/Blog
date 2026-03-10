@@ -13,6 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const DashboardPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -47,6 +48,7 @@ const DashboardPage = () => {
       });
     } catch (error) {
       console.error("Failed to fetch dashboard data:", error);
+      toast.error("Failed to load dashboard data. Please try again later.");
     } finally {
       setLoading(false);
     }

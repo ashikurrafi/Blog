@@ -27,6 +27,7 @@ import { Loader2, Lock, Trash2, User } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -142,6 +143,10 @@ const ProfilePage = () => {
       navigate("/");
     } catch (err) {
       console.error("Failed to delete account:", err);
+      toast.error(
+        err.response?.data?.message ||
+          "Failed to delete account. Please try again.",
+      );
     } finally {
       setDeleteLoading(false);
     }

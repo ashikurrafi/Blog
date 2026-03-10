@@ -20,6 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,6 +57,7 @@ const HomePage = () => {
       setPagination(pagination);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
+      toast.error("Failed to load posts. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -67,6 +69,7 @@ const HomePage = () => {
       setCategories(response.data.data);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
+      toast.error("Failed to load categories. Please try again.");
     }
   };
 

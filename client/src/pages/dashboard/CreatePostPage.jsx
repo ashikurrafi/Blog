@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, ImagePlus, Loader2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const CreatePostPage = () => {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ const CreatePostPage = () => {
       setCategories(response.data.data);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
+      toast.error("Failed to load categories. Please try again later.");
     }
   };
 
