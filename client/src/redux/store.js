@@ -1,7 +1,9 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import authSlice from './authSlice';
 import blogSlice from './blogSlice';
+import categorySlice from './categorySlice';
 import commentSlice from './commentSlice';
+import uiSlice from './uiSlice';
 
 import {
   FLUSH,
@@ -18,11 +20,14 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
+  whitelist: ['auth', 'ui'], // Only persist auth and ui
 };
 const rootReducer = combineReducers({
   auth: authSlice,
   blog: blogSlice,
+  category: categorySlice,
   comment: commentSlice,
+  ui: uiSlice,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
