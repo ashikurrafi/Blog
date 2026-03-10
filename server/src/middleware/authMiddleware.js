@@ -15,7 +15,7 @@ const authenticate = asyncHandler(async (req, res, next) => {
 
     const user = await userModel
       .findById(decoded.userId)
-      .select('_id name superName email role');
+      .select('_id name email role');
 
     if (!user) {
       res.clearCookie('token', {

@@ -42,7 +42,7 @@ export const getUserById = asyncHandler(async (req, res) => {
 });
 
 export const updateUserProfile = asyncHandler(async (req, res) => {
-  const { name, password, superName } = req.body;
+  const { name, password } = req.body;
   const file = req.file;
   const { userId } = req.params;
 
@@ -69,13 +69,6 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
 
   if (name) user.name = name;
   if (password) user.password = password;
-
-  if (
-    superName !== undefined &&
-    (user.role === 'superuser' || user.role === 'admin')
-  ) {
-    user.superName = superName;
-  }
 
   await user.save();
 

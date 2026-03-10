@@ -6,10 +6,6 @@ const blogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    isSuper: {
-      type: Boolean,
-      default: false,
-    },
     description: {
       type: String,
       required: true,
@@ -32,7 +28,7 @@ const blogSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-blogSchema.index({ isSuper: 1, createdAt: -1 });
+blogSchema.index({ createdAt: -1 });
 
 const Blog = mongoose.model('Blog', blogSchema);
 

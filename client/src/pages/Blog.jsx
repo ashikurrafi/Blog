@@ -16,20 +16,18 @@ const Blog = () => {
   // blog form
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [isSuper, setIsSuper] = useState(false);
   const [file, setFile] = useState(null);
   const [editingBlogId, setEditingBlogId] = useState(null);
 
   // comment form
   const [commentText, setCommentText] = useState("");
-  const [isSuperComment, setIsSuperComment] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editCommentText, setEditCommentText] = useState("");
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const isSuperOrAdmin = user?.role === "superuser" || user?.role === "admin";
+  const isAdmin = user?.role === "admin";
 
   /* ──────────────── FETCH HELPERS ──────────────── */
 
@@ -68,7 +66,6 @@ const Blog = () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    if (isSuperOrAdmin) formData.append("isSuper", isSuper);
     if (file) formData.append("file", file);
 
     try {
@@ -112,10 +109,8 @@ const Blog = () => {
     try {
       await apiClient.post(`/comment/createComment/${selectedBlog._id}`, {
         content: commentText,
-        isSuper: isSuperOrAdmin ? isSuperComment : false,
       });
       setCommentText("");
-      setIsSuperComment(false);
       fetchComments(selectedBlog._id);
     } catch (err) {
       alert(err.message);
@@ -150,7 +145,6 @@ const Blog = () => {
   const resetBlogForm = () => {
     setTitle("");
     setDescription("");
-    setIsSuper(false);
     setFile(null);
     setEditingBlogId(null);
     setError("");
@@ -166,7 +160,6 @@ const Blog = () => {
     setEditingBlogId(blog._id);
     setTitle(blog.title);
     setDescription(blog.description);
-    setIsSuper(blog.isSuper || false);
     setFile(null);
     setView("form");
   };
@@ -177,16 +170,10 @@ const Blog = () => {
   };
 
   const authorName = (blog) => {
-    if (blog.isSuper && isSuperOrAdmin && blog.author?.superName) {
-      return blog.author.superName;
-    }
     return blog.author?.name || "Unknown";
   };
 
   const commenterName = (comment) => {
-    if (comment.isSuper && isSuperOrAdmin && comment.userId?.superName) {
-      return comment.userId.superName;
-    }
     return comment.userId?.name || "Unknown";
   };
 
@@ -240,11 +227,6 @@ const Blog = () => {
                     style={{ cursor: "pointer", color: "#1a0dab" }}
                   >
                     {blog.title}
-                    {blog.isSuper && (
-                      <span style={{ color: "gold", marginLeft: 8 }}>
-                        ⭐ Super
-                      </span>
-                    )}
                   </h3>
                   <p>
                     {blog.description.length > 150
@@ -333,19 +315,6 @@ const Blog = () => {
             />
           </div>
 
-          {isSuperOrAdmin && (
-            <div style={{ marginTop: 8 }}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={isSuper}
-                  onChange={(e) => setIsSuper(e.target.checked)}
-                />{" "}
-                Super Blog (visible only to Super Users &amp; Admins)
-              </label>
-            </div>
-          )}
-
           <div style={{ marginTop: 8 }}>
             <label>Image (optional):</label>
             <br />
@@ -385,12 +354,7 @@ const Blog = () => {
             borderRadius: 8,
           }}
         >
-          <h2>
-            {selectedBlog.title}
-            {selectedBlog.isSuper && (
-              <span style={{ color: "gold" }}> ⭐ Super Blog</span>
-            )}
-          </h2>
+          <h2>{selectedBlog.title}</h2>
 
           {selectedBlog.imageUrl && (
             <img
@@ -421,19 +385,6 @@ const Blog = () => {
             required
           />
 
-          {isSuperOrAdmin && (
-            <div>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={isSuperComment}
-                  onChange={(e) => setIsSuperComment(e.target.checked)}
-                />{" "}
-                Super Comment (visible only to Super Users &amp; Admins)
-              </label>
-            </div>
-          )}
-
           <button type="submit">Post Comment</button>
         </form>
 
@@ -443,17 +394,11 @@ const Blog = () => {
             <div
               key={c._id}
               style={{
-                borderLeft: c.isSuper ? "3px solid gold" : "3px solid #ddd",
+                borderLeft: "3px solid #ddd",
                 padding: "8px 12px",
                 margin: "6px 0",
               }}
             >
-              {c.isSuper && (
-                <span style={{ color: "gold", fontSize: 12 }}>
-                  ⭐ Super Comment
-                </span>
-              )}
-
               {editingCommentId === c._id ? (
                 <div>
                   <textarea

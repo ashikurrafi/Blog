@@ -7,10 +7,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    superName: {
-      type: String,
-      default: '',
-    },
     bio: {
       type: String,
       default: '',
@@ -35,7 +31,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'admin', 'superuser'],
+      enum: ['user', 'admin'],
       default: 'user',
     },
   },

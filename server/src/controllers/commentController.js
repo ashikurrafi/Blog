@@ -4,18 +4,16 @@ import asyncHandler from '../errors/asyncHandler.js';
 import blogModel from '../models/blogModel.js';
 import commentModel from '../models/commentModel.js';
 
+// Fields to populate for user data
+const populateSelect = 'name role photoUrl';
+
 export const createComment = asyncHandler(async (req, res) => {
   const { postId } = req.params;
   const commenterUserId = req.id;
-  const { content, isSuper = false } = req.body;
+  const { content } = req.body;
 
   if (!content) {
     throw new apiError(400, 'Comment content is required');
-  }
-
-  // only superusers and admins can create super comments
-  if (isSuper && req.user.role === 'user') {
-    throw new apiError(403, 'You are not allowed to create super comments');
   }
 
   const blog = await blogModel.findById(postId);
@@ -23,20 +21,11 @@ export const createComment = asyncHandler(async (req, res) => {
     throw new apiError(404, 'Blog post not found');
   }
 
-  // normal users cannot comment on super blogs
-  if (blog.isSuper && req.user.role === 'user') {
-    throw new apiError(403, 'You are not allowed to comment on this blog');
-  }
-
   const comment = await commentModel.create({
     content,
-    isSuper,
     userId: commenterUserId,
     postId,
   });
-
-  const populateSelect =
-    req.user.role === 'user' ? 'name photoUrl' : 'name superName photoUrl';
 
   await comment.populate({
     path: 'userId',
@@ -87,7 +76,6 @@ export const updateComment = asyncHandler(async (req, res) => {
 });
 
 export const deleteComment = asyncHandler(async (req, res) => {
-  aaaa;
   const { commentId } = req.params;
   const userId = req.id;
   const role = req.user.role;
@@ -125,14 +113,6 @@ export const getBlogComments = asyncHandler(async (req, res) => {
 
   let filter = { postId };
 
-  // normal users can't see super comments
-  if (role === 'user') {
-    filter.isSuper = false;
-  }
-
-  const populateSelect =
-    role === 'user' ? 'name photoUrl' : 'name superName photoUrl';
-
   const comments = await commentModel
     .find(filter)
     .populate({ path: 'userId', select: populateSelect })
@@ -152,12 +132,6 @@ export const getAllComment = asyncHandler(async (req, res) => {
   const role = req.user.role;
 
   let filter = {};
-  if (role === 'user') {
-    filter.isSuper = false;
-  }
-
-  const populateSelect =
-    role === 'user' ? 'name photoUrl' : 'name superName photoUrl';
 
   const comments = await commentModel
     .find(filter)
@@ -188,12 +162,6 @@ export const getAllCommentsOnMyBlogs = asyncHandler(async (req, res) => {
   }
 
   let filter = { postId: { $in: blogIds } };
-  if (role === 'user') {
-    filter.isSuper = false;
-  }
-
-  const populateSelect =
-    role === 'user' ? 'name photoUrl' : 'name superName photoUrl';
 
   const comments = await commentModel
     .find(filter)

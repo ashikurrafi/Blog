@@ -25,46 +25,6 @@ export const createUserToAdmin = asyncHandler(async (req, res) => {
   res.status(response.statusCode).json(response);
 });
 
-export const createUserToSuperUser = asyncHandler(async (req, res) => {
-  const { userId } = req.params;
-  const { superName } = req.body;
-
-  const user = await userModel.findById(userId);
-  if (!user) throw new apiError(404, 'User not found');
-
-  user.role = 'superuser';
-  if (superName) user.superName = superName;
-  await user.save();
-
-  const response = new apiResponse(
-    200,
-    user,
-    'User promoted to superuser successfully',
-    true,
-  );
-
-  res.status(response.statusCode).json(response);
-});
-
-export const createAdminToSuperUser = asyncHandler(async (req, res) => {
-  const { adminId } = req.params;
-
-  const admin = await userModel.findById(adminId);
-  if (!admin) throw new apiError(404, 'Admin not found');
-
-  admin.role = 'superuser';
-  await admin.save();
-
-  const response = new apiResponse(
-    200,
-    admin,
-    'Admin changed to superuser successfully',
-    true,
-  );
-
-  res.status(response.statusCode).json(response);
-});
-
 export const createAdminToUser = asyncHandler(async (req, res) => {
   const { adminId } = req.params;
 
@@ -72,7 +32,6 @@ export const createAdminToUser = asyncHandler(async (req, res) => {
   if (!admin) throw new apiError(404, 'Admin not found');
 
   admin.role = 'user';
-  admin.superName = '';
   await admin.save();
 
   const response = new apiResponse(
@@ -106,7 +65,7 @@ export const deleteUserByAdmin = asyncHandler(async (req, res) => {
 
 export const updateUserByAdmin = asyncHandler(async (req, res) => {
   const { userId } = req.params;
-  const { name, email, phone, superName } = req.body;
+  const { name, email, phone } = req.body;
   const file = req.file;
 
   const user = await userModel.findById(userId);
@@ -122,7 +81,6 @@ export const updateUserByAdmin = asyncHandler(async (req, res) => {
   if (name) user.name = name;
   if (email) user.email = email;
   if (phone) user.phone = phone;
-  if (superName !== undefined) user.superName = superName;
 
   await user.save();
 
@@ -190,7 +148,7 @@ export const deleteAdmin = asyncHandler(async (req, res) => {
 
 export const updateAdmin = asyncHandler(async (req, res) => {
   const { adminId } = req.params;
-  const { name, email, phone, role, superName } = req.body;
+  const { name, email, phone, role } = req.body;
   const file = req.file;
 
   const admin = await userModel.findById(adminId);
@@ -209,7 +167,6 @@ export const updateAdmin = asyncHandler(async (req, res) => {
   if (email) admin.email = email;
   if (phone) admin.phone = phone;
   if (role) admin.role = role;
-  if (superName !== undefined) admin.superName = superName;
 
   await admin.save();
 

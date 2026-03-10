@@ -7,15 +7,11 @@ import cloudinary, { deleteFromCloudinary } from '../utils/cloudinary.js';
 import getDataUri from '../utils/dataUri.js';
 
 export const createBlog = asyncHandler(async (req, res) => {
-  const { title, description, isSuper = false } = req.body;
+  const { title, description } = req.body;
   const user = req.user;
 
   if (!title || !description) {
     throw new apiError(400, 'Title and description are required');
-  }
-
-  if (isSuper === true && user.role === 'user') {
-    throw new apiError(403, 'You are not allowed to create super blogs');
   }
 
   let imageUrl = '';
@@ -29,7 +25,6 @@ export const createBlog = asyncHandler(async (req, res) => {
     title,
     description,
     imageUrl,
-    isSuper,
     author: user._id,
   });
 
@@ -47,12 +42,8 @@ export const getAllBlogs = asyncHandler(async (req, res) => {
   const role = req.user.role;
   let filter = {};
 
-  if (role === 'user') {
-    filter.isSuper = false;
-  }
-
   const authorSelect =
-    role === 'user' ? 'name role photoUrl' : 'name superName role photoUrl';
+    role === 'user' ? 'name role photoUrl' : 'name role photoUrl';
 
   const blogs = await blogModel
     .find(filter)
@@ -74,16 +65,12 @@ export const getBlogById = asyncHandler(async (req, res) => {
   const role = req.user.role;
 
   const authorSelect =
-    role === 'user' ? 'name role photoUrl' : 'name superName role photoUrl';
+    role === 'user' ? 'name role photoUrl' : 'name role photoUrl';
 
   const blog = await blogModel.findById(id).populate('author', authorSelect);
 
   if (!blog) {
     throw new apiError(404, 'Blog not found');
-  }
-
-  if (blog.isSuper && role === 'user') {
-    throw new apiError(403, 'You are not allowed to view this blog');
   }
 
   const response = new apiResponse(
@@ -98,7 +85,7 @@ export const getBlogById = asyncHandler(async (req, res) => {
 
 export const updateBlog = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { title, description, isSuper } = req.body;
+  const { title, description } = req.body;
   const user = req.user;
 
   const blog = await blogModel.findById(id);
@@ -111,13 +98,8 @@ export const updateBlog = asyncHandler(async (req, res) => {
     throw new apiError(403, 'You are not allowed to update this blog');
   }
 
-  if (typeof isSuper === 'boolean' && user.role === 'user') {
-    throw new apiError(403, 'You are not allowed to change blog visibility');
-  }
-
   if (title) blog.title = title;
   if (description) blog.description = description;
-  if (typeof isSuper === 'boolean') blog.isSuper = isSuper;
 
   // If new image uploaded → delete old one from Cloudinary first
   if (req.file) {
@@ -173,12 +155,9 @@ export const getBlogByUser = asyncHandler(async (req, res) => {
   const role = req.user.role;
 
   let filter = { author: userId };
-  if (role === 'user') {
-    filter.isSuper = false;
-  }
 
   const authorSelect =
-    role === 'user' ? 'name role photoUrl' : 'name superName role photoUrl';
+    role === 'user' ? 'name role photoUrl' : 'name role photoUrl';
 
   const blogs = await blogModel
     .find(filter)

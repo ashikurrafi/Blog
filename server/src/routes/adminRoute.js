@@ -1,10 +1,8 @@
 import express from 'express';
 
 import {
-  createAdminToSuperUser,
   createAdminToUser,
   createUserToAdmin,
-  createUserToSuperUser,
   deleteAdmin,
   deleteUserByAdmin,
   getAdminById,
@@ -27,24 +25,11 @@ adminRouter.patch(
   createUserToAdmin,
 );
 adminRouter.patch(
-  '/createUserToSuperUser/:userId',
-  authenticate,
-  isAdmin,
-  createUserToSuperUser,
-);
-adminRouter.patch(
   '/createAdminToUser/:adminId',
   authenticate,
   isAdmin,
   createAdminToUser,
 );
-adminRouter.patch(
-  '/createAdminToSuperUser/:adminId',
-  authenticate,
-  isAdmin,
-  createAdminToSuperUser,
-);
-
 // user management by admin
 adminRouter.delete(
   '/deleteUserByAdmin/:userId',
