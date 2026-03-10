@@ -52,12 +52,18 @@ const HomePage = () => {
       if (categoryFilter) params.append("category", categoryFilter);
 
       const response = await apiClient.get(`/blog/public?${params}`);
-      const { posts, pagination } = response.data.data;
-      setPosts(posts);
-      setPagination(pagination);
+      const data = response.data?.data;
+      if (data) {
+        setPosts(data.posts || []);
+        setPagination(data.pagination || { page: 1, pages: 1, total: 0 });
+      } else {
+        setPosts([]);
+        setPagination({ page: 1, pages: 1, total: 0 });
+      }
     } catch (error) {
       console.error("Failed to fetch posts:", error);
       toast.error("Failed to load posts. Please try again.");
+      setPosts([]);
     } finally {
       setLoading(false);
     }
@@ -66,10 +72,11 @@ const HomePage = () => {
   const fetchCategories = async () => {
     try {
       const response = await apiClient.get("/category");
-      setCategories(response.data.data);
+      setCategories(response.data?.data || []);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
       toast.error("Failed to load categories. Please try again.");
+      setCategories([]);
     }
   };
 

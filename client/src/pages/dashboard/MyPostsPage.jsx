@@ -80,12 +80,17 @@ const MyPostsPage = () => {
       }
 
       const response = await apiClient.get(`/blog/myBlogs?${params}`);
-      const { posts, pagination: paginationData } = response.data.data;
-      setPosts(posts);
-      setPagination(paginationData);
+      const data = response.data?.data;
+      if (data) {
+        setPosts(data.posts || []);
+        setPagination(data.pagination || { page: 1, pages: 1, total: 0 });
+      } else {
+        setPosts([]);
+      }
     } catch (error) {
       console.error("Failed to fetch posts:", error);
       toast.error("Failed to load posts. Please try again.");
+      setPosts([]);
     } finally {
       setLoading(false);
     }

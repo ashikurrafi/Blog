@@ -34,7 +34,9 @@ const DashboardPage = () => {
     setLoading(true);
     try {
       const response = await apiClient.get("/blog/myBlogs?limit=5");
-      const { posts, pagination } = response.data.data;
+      const data = response.data?.data;
+      const posts = data?.posts || [];
+      const pagination = data?.pagination || { total: 0 };
 
       setRecentPosts(posts);
       setStats({
@@ -49,6 +51,7 @@ const DashboardPage = () => {
     } catch (error) {
       console.error("Failed to fetch dashboard data:", error);
       toast.error("Failed to load dashboard data. Please try again later.");
+      setRecentPosts([]);
     } finally {
       setLoading(false);
     }
