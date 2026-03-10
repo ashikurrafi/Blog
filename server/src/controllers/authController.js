@@ -16,7 +16,7 @@ export const registerUser = asyncHandler(async (req, res) => {
   }
 
   const existingUser = await userModel.findOne({
-    $or: [{ email: email }, { phone: phone }],
+    $or: [{ email }, { phone }],
   });
 
   if (existingUser) {
@@ -32,16 +32,30 @@ export const registerUser = asyncHandler(async (req, res) => {
 
   await newUser.save();
 
+  const accessToken = jwt.sign(
+    { userId: newUser._id },
+    process.env.JWT_SECRET_KEY,
+    { expiresIn: '1d' },
+  );
+
   const { password: _, ...userWithoutPassword } = newUser.toObject();
 
   const response = new apiResponse(
     201,
-    { user: userWithoutPassword },
+    { user: userWithoutPassword, accessToken },
     'User registered successfully',
     true,
   );
 
-  res.status(response.statusCode).json(response);
+  res
+    .status(response.statusCode)
+    .cookie('token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    })
+    .json(response);
 });
 
 export const loginUser = asyncHandler(async (req, res) => {
@@ -63,22 +77,26 @@ export const loginUser = asyncHandler(async (req, res) => {
     throw new apiError(401, 'Invalid email or password');
   }
 
-  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: '1d',
-  });
+  const accessToken = jwt.sign(
+    { userId: user._id },
+    process.env.JWT_SECRET_KEY,
+    {
+      expiresIn: '1d',
+    },
+  );
 
   const { password: _, ...userWithoutPassword } = user.toObject();
 
   const response = new apiResponse(
     200,
-    { user: userWithoutPassword, token },
+    { user: userWithoutPassword, accessToken },
     'User logged in successfully',
     true,
   );
 
   res
     .status(response.statusCode)
-    .cookie('token', token, {
+    .cookie('token', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',

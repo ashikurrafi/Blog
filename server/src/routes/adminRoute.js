@@ -5,8 +5,11 @@ import {
   createUserToAdmin,
   deleteAdmin,
   deleteUserByAdmin,
+  deleteUserById,
   getAdminById,
   getAllAdmins,
+  getAllUsers,
+  toggleUserRole,
   updateAdmin,
   updateUserByAdmin,
 } from '../controllers/adminController.js';
@@ -17,7 +20,12 @@ import { singleUpload } from '../middleware/multer.js';
 
 const adminRouter = express.Router();
 
-// role management
+// User management (new simplified endpoints)
+adminRouter.get('/users', authenticate, isAdmin, getAllUsers);
+adminRouter.patch('/users/:userId/role', authenticate, isAdmin, toggleUserRole);
+adminRouter.delete('/users/:userId', authenticate, isAdmin, deleteUserById);
+
+// role management (legacy)
 adminRouter.patch(
   '/createUserToAdmin/:userId',
   authenticate,
@@ -30,7 +38,7 @@ adminRouter.patch(
   isAdmin,
   createAdminToUser,
 );
-// user management by admin
+// user management by admin (legacy)
 adminRouter.delete(
   '/deleteUserByAdmin/:userId',
   authenticate,

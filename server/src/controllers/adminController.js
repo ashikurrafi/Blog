@@ -6,6 +6,67 @@ import { cascadeDeleteUser } from '../utils/cascadeDelete.js';
 import cloudinary, { deleteFromCloudinary } from '../utils/cloudinary.js';
 import getDataUri from '../utils/dataUri.js';
 
+// Get all users (admin only)
+export const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await userModel
+    .find()
+    .select('-password')
+    .sort({ createdAt: -1 });
+
+  const response = new apiResponse(
+    200,
+    users,
+    'Users retrieved successfully',
+    true,
+  );
+
+  res.status(response.statusCode).json(response);
+});
+
+// Toggle user role (admin <-> user)
+export const toggleUserRole = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  const { role } = req.body;
+
+  const user = await userModel.findById(userId);
+  if (!user) throw new apiError(404, 'User not found');
+
+  // Validate role
+  if (!['user', 'admin'].includes(role)) {
+    throw new apiError(400, 'Invalid role. Must be "user" or "admin"');
+  }
+
+  user.role = role;
+  await user.save();
+
+  const userObj = user.toObject();
+  delete userObj.password;
+
+  const response = new apiResponse(
+    200,
+    userObj,
+    `User role updated to ${role} successfully`,
+    true,
+  );
+
+  res.status(response.statusCode).json(response);
+});
+
+// Delete user by admin
+export const deleteUserById = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await userModel.findById(userId);
+  if (!user) throw new apiError(404, 'User not found');
+
+  // Full cascade delete
+  await cascadeDeleteUser(userId);
+
+  const response = new apiResponse(200, null, 'User deleted successfully', true);
+
+  res.status(response.statusCode).json(response);
+});
+
 export const createUserToAdmin = asyncHandler(async (req, res) => {
   const { userId } = req.params;
 

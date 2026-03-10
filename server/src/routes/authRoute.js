@@ -8,9 +8,9 @@ import {
 
 const authRouter = express.Router(); // Creating an instance of the router
 
-// Defining a GET route at the root of the /api/v1/demo path
-authRouter.post('/registerUser', registerUser);
-authRouter.post('/loginUser', loginUser);
+// Auth routes
+authRouter.post('/register', registerUser);
+authRouter.post('/login', loginUser);
 authRouter.post('/logout', logoutUser);
 
 // Exporting the router so it can be used in other files
